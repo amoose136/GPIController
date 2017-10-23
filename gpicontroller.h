@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::gpicontroller *ui;
+    void on_send_Button_clicked();
 };
 
 #endif // GPICONTROLLER_H
