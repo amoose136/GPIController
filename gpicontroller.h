@@ -13,11 +13,15 @@ class gpicontroller : public QMainWindow
 
 public:
     explicit gpicontroller(QWidget *parent = 0);
+    void sendCommand();
     ~gpicontroller();
+
+private slots:
+    void on_send_Button_clicked();
 
 private:
     Ui::gpicontroller *ui;
-    void on_send_Button_clicked();
+    QString portname;
 };
 
 #endif // GPICONTROLLER_H
