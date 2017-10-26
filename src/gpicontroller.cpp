@@ -17,11 +17,14 @@ QString gpicontroller::getport(){
 }
 
 QSerialPort* gpicontroller::openport(QString portname){
-    if (port)
+    QSerialPortInfo *portinfo=new QSerialPortInfo(&gpicontroller::port);
+    if (portinfo!=nullptr)
+    {
         port->close();
-    QSerialPort *port = new QSerialPort;
+    }
 
     port->setPortName(portname);
+
 
     // Check the validity of the port
     if ( !port->open(QIODevice::ReadWrite) ) {
@@ -72,8 +75,9 @@ gpicontroller::gpicontroller(QWidget *parent) :
         ui->comBox->setCurrentIndex(ui->comBox->findText("/dev/cu.usbserial"));
     if (QSysInfo::productType()=="windows" && ui->comBox->findText("COM3")+1)
         ui->comBox->setCurrentIndex(ui->comBox->findText("COM3"));
-
+    QSerialPort * port = new QSerialPort;
     port=openport(getport());
+
 }
 
 void gpicontroller::sendCommand( QSerialPort* port){

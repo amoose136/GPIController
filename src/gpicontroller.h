@@ -20,22 +20,24 @@ class gpicontroller : public QMainWindow
 
     public:
         explicit gpicontroller(QWidget *parent = 0);
-        QSerialPort* port;
         void sendCommand(QSerialPort* port);
         ~gpicontroller();
         QSerialPort* openport(QString portname);
         QString getport();
+        QSerialPortInfo* portinfo;
+        QSerialPort* port;
+
     private slots:
         void on_buttonSelectVial_clicked();
-
         void on_buttonRefresh_clicked();
-
         void on_buttonConnect_clicked();
 
-private:
+    private:
         Ui::gpicontroller *ui;
         QString portname;
         void refresh_comBox();
+
+
 };
 
 
