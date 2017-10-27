@@ -10,41 +10,40 @@
 #include <QSerialPortInfo>
 #include <QSysInfo>
 
+QSerialPort* port=new QSerialPort;
 QString gpicontroller::getport(){
     QString portname;
     portname=ui->comBox->currentText();
     return portname;
 }
-
 QSerialPort* gpicontroller::openport(QString portname){
-    QSerialPortInfo *portinfo=new QSerialPortInfo(&gpicontroller::port);
-    if (portinfo!=nullptr)
-    {
-        port->close();
-    }
-
-    port->setPortName(portname);
+//    if (&port!=nullptr && port.open(QIODevice::ReadWrite)){
+//        port.close();
+//    }
+    QSerialPort nport;
+    nport.setPortName(portname);
 
 
     // Check the validity of the port
-    if ( !port->open(QIODevice::ReadWrite) ) {
-        qDebug() << "\nError: " << port->portName() << " port can't be opened ...";
-        ui->console->append(" port can't be opened ...");
+    qDebug() << nport.open(QIODevice::ReadWrite);
+    if ( !nport.open(QIODevice::ReadWrite) ) {
+        qDebug() << "\nError: " << nport.portName() << " port can't be opened ...";
+        ui->console->append(nport.portName()+" port can't be opened ...");
         ui->labelComstate->setText("Disconnected");
     }
     else {
-        qDebug() << '\n' << port->portName() << " port has been opened successfully ...";
+        qDebug() << nport.portName() << " port has been opened successfully ...";
         ui->console->append(" port has been opened successfully ...");
-        port->setBaudRate(QSerialPort::Baud9600);
-        port->setStopBits(QSerialPort::OneStop);
-        port->setDataBits(QSerialPort::Data8);
-        port->setParity(QSerialPort::NoParity);
-        port->setFlowControl(QSerialPort::NoFlowControl);
-        qDebug() << port->portName() << " port has been configured correctly ...";
+        nport.setBaudRate(QSerialPort::Baud9600);
+        nport.setStopBits(QSerialPort::OneStop);
+        nport.setDataBits(QSerialPort::Data8);
+        nport.setParity(QSerialPort::NoParity);
+        nport.setFlowControl(QSerialPort::NoFlowControl);
+        qDebug() << nport.portName() << " port has been configured correctly ...";
         ui->console->append(" port has been configured correctly ...");
         ui->labelComstate->setText("Connected");
     }
-    return port;
+    return &nport;
 }
 
 void gpicontroller::refresh_comBox(){
@@ -75,19 +74,19 @@ gpicontroller::gpicontroller(QWidget *parent) :
         ui->comBox->setCurrentIndex(ui->comBox->findText("/dev/cu.usbserial"));
     if (QSysInfo::productType()=="windows" && ui->comBox->findText("COM3")+1)
         ui->comBox->setCurrentIndex(ui->comBox->findText("COM3"));
-    QSerialPort * port = new QSerialPort;
     port=openport(getport());
 
 }
 
-void gpicontroller::sendCommand( QSerialPort* port){
+void gpicontroller::selectVial(){
     QString message = "@GTV ";
     message+=ui->spinboxSelectVial->cleanText();
     qDebug() << message;
+    qDebug() << port->open(QIODevice::ReadWrite);
     ui->console->append(message);
     ui->console->scroll(0,-1);
     message+="\r";
-    port->write(message.toLatin1().data(),message.length());
+//    port->write(message.toLatin1().data(),message.length());
 }
 
 gpicontroller::~gpicontroller()
@@ -97,7 +96,7 @@ gpicontroller::~gpicontroller()
 
 void gpicontroller::on_buttonSelectVial_clicked()
 {
-   sendCommand(port);
+   selectVial();
 }
 
 
@@ -109,5 +108,5 @@ void gpicontroller::on_buttonRefresh_clicked()
 void gpicontroller::on_buttonConnect_clicked()
 {
     refresh_comBox();
-    port=openport(getport());
+    openport(getport());
 }

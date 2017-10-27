@@ -20,12 +20,13 @@ class gpicontroller : public QMainWindow
 
     public:
         explicit gpicontroller(QWidget *parent = 0);
-        void sendCommand(QSerialPort* port);
+        void selectVial();
         ~gpicontroller();
         QSerialPort* openport(QString portname);
         QString getport();
         QSerialPortInfo* portinfo;
-        QSerialPort* port;
+        static QSerialPort* port;
+        void refresh_comBox();
 
     private slots:
         void on_buttonSelectVial_clicked();
@@ -35,7 +36,7 @@ class gpicontroller : public QMainWindow
     private:
         Ui::gpicontroller *ui;
         QString portname;
-        void refresh_comBox();
+
 
 
 };
