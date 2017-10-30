@@ -103,7 +103,7 @@
       <x>30</x>
       <y>90</y>
       <width>221</width>
-      <height>211</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -115,7 +115,7 @@
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>12</pointsize>
+      <pointsize>11</pointsize>
      </font>
     </property>
     <property name="title">
@@ -134,9 +134,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>19</y>
+       <y>30</y>
        <width>201</width>
-       <height>194</height>
+       <height>191</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="layoutMove">
@@ -291,7 +291,7 @@
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>12</pointsize>
+      <pointsize>11</pointsize>
      </font>
     </property>
     <property name="title">
