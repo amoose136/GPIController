@@ -9,7 +9,6 @@
 #include <QMainWindow>
 #include <QSerialPort>
 #include <QComboBox>
-
 namespace Ui {
     class gpicontroller;
 }
@@ -22,22 +21,24 @@ class gpicontroller : public QMainWindow
         explicit gpicontroller(QWidget *parent = 0);
         void selectVial();
         ~gpicontroller();
-        QSerialPort* openport(QString portname);
+        void openport(QString portname);
         QString getport();
         QSerialPortInfo* portinfo;
-        static QSerialPort* port;
         void refresh_comBox();
+        QSerialPort* port;
+        QString readData;
 
     private slots:
         void on_buttonSelectVial_clicked();
         void on_buttonRefresh_clicked();
         void on_buttonConnect_clicked();
+        void read_data();
 
-    private:
+        void on_buttonHome_clicked();
+
+private:
         Ui::gpicontroller *ui;
         QString portname;
-
-
 
 };
 
