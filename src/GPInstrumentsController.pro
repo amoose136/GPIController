@@ -11,21 +11,25 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = GPInstrumentsController
 TEMPLATE = app
 
-INCLUDEPATH +="darkstyle"
 INCLUDEPATH +="framelesswindow"
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES     += \
                 main.cpp \
-                gpicontroller.cpp
+                gpicontroller.cpp \
+                framelesswindow/framelesswindow.cpp \
+                framelesswindow/windowdragger.cpp
 
 HEADERS     += \
-                gpicontroller.h
-                DarkStyle.h
+                gpicontroller.h \
+                DarkStyle.h \
+                framelesswindow/windowdragger.h \
+                framelesswindow/framelesswindow.h
 
 FORMS       += \
-                gpicontroller.ui
+                gpicontroller.ui \
+                framelesswindow/framelesswindow.ui
 
 RESOURCES   += \
                 darkstyle.qrc \

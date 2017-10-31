@@ -3,12 +3,15 @@
 #include <QDebug>
 #include <QSerialPort>
 #include "DarkStyle.h"
+#include "framelesswindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     CDarkStyle::assign();
-    gpicontroller w;
-    w.show();
+    FramelessWindow framelessWindow;
+    gpicontroller* mainw=new gpicontroller;
+    framelessWindow.setContent(mainw);
+    framelessWindow.show();
     return a.exec();
 }
