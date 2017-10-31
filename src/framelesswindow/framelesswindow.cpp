@@ -28,6 +28,7 @@ FramelessWindow::FramelessWindow(QWidget *parent): QWidget(parent)
 
   restoreButton->setVisible(false);
 
+  maximizeButton->setVisible(false); //gpi controller customization
   //shadow under window title text
   QGraphicsDropShadowEffect *textShadow = new QGraphicsDropShadowEffect;
   textShadow->setBlurRadius(4.0);
@@ -144,9 +145,10 @@ void FramelessWindow::on_minimizeButton_clicked()
 
 void FramelessWindow::on_restoreButton_clicked() {
   restoreButton->setVisible(false);
-  maximizeButton->setVisible(true);
+//  maximizeButton->setVisible(true);
+  maximizeButton->setVisible(false); //gpi customization
   setWindowState(Qt::WindowNoState);
-  styleWindow(true, true);
+  styleWindow(true, false);
 }
 void FramelessWindow::on_maximizeButton_clicked()
 {

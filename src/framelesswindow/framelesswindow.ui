@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>695</width>
-    <height>574</height>
+    <width>688</width>
+    <height>591</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,7 +105,7 @@
   color:rgb(153,153,153);</string>
            </property>
            <property name="text">
-            <string>Frameless Window (Dark Style)</string>
+            <string>GPI AutoSampler 720NV Debug Controller</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
