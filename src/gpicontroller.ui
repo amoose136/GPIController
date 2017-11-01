@@ -582,7 +582,7 @@
       <height>31</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="layoutHome">
      <property name="spacing">
       <number>1</number>
      </property>
@@ -681,7 +681,7 @@
       <height>331</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <layout class="QVBoxLayout" name="layoutConsole">
      <item>
       <widget class="QTextBrowser" name="console">
        <property name="sizePolicy">
@@ -718,7 +718,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="layoutConsoleSendBar">
        <item>
         <widget class="QLineEdit" name="arbitrarySerialLine"/>
        </item>

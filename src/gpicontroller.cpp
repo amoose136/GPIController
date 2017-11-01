@@ -9,6 +9,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QSerialPortInfo>
 #include <QSysInfo>
+#include <QScrollBar>
 
 QString gpicontroller::getport(){
     QString portname;
@@ -52,8 +53,6 @@ gpicontroller::gpicontroller(QWidget *parent) :
         ui->comBox->setCurrentIndex(ui->comBox->findText("COM3"));
     port=new QSerialPort(this);
     openport(getport());
-    QString readData;
-
 }
 
 void gpicontroller::openport(QString portname){
@@ -81,7 +80,10 @@ void gpicontroller::openport(QString portname){
         port->setFlowControl(QSerialPort::NoFlowControl);
         qDebug() << port->portName() << " port has been configured correctly ...";
         ui->console->append(port->portName()+" port has been configured correctly ...");
-        ui->console->scroll(-5,-5);
+        QScrollBar *vsb = ui->console->verticalScrollBar();
+        QScrollBar *hsb = ui->console->horizontalScrollBar();
+        vsb->setValue(vsb->maximum());
+        hsb->setValue(hsb->minimum());
         ui->labelComstate->setText("Connected");
     }
     connect(port, &QSerialPort::readyRead, this, &gpicontroller::read_data);
@@ -93,7 +95,10 @@ void gpicontroller::selectVial(){
     message+=ui->spinboxSelectVial->cleanText();
     qDebug() << message;
     ui->console->append(message);
-    ui->console->scroll(0,-1);
+    QScrollBar *vsb = ui->console->verticalScrollBar();
+    QScrollBar *hsb = ui->console->horizontalScrollBar();
+    vsb->setValue(vsb->maximum());
+    hsb->setValue(hsb->minimum());
     message+="\r";
     port->write(message.toLatin1().data(),message.length());
 }
@@ -127,7 +132,9 @@ void gpicontroller::read_data()
         ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
         readData.clear();
     }
-    ui->console->scroll(0,-1);
+    QScrollBar *vsb = ui->console->verticalScrollBar();
+    vsb->setValue(vsb->maximum());
+
 }
 
 void gpicontroller::on_buttonHome_clicked()
@@ -139,7 +146,10 @@ void gpicontroller::sendmessage(QString message)
 {
     qDebug() << message;
     ui->console->append(message);
-    ui->console->scroll(0,-1);
+    QScrollBar *vsb = ui->console->verticalScrollBar();
+    QScrollBar *hsb = ui->console->horizontalScrollBar();
+    vsb->setValue(vsb->maximum());
+    hsb->setValue(hsb->minimum());
     message+="\r";
     port->write(message.toLatin1().data(),message.length());
 }
@@ -247,4 +257,5 @@ void gpicontroller::on_arbitrarySerialLine_returnPressed()
 void gpicontroller::on_buttonSendArbitrary_clicked()
 {
     sendmessage(ui->arbitrarySerialLine->text().simplified()); //simplified removes whitespace from front and back
+    ui->arbitrarySerialLine->clear();
 }
