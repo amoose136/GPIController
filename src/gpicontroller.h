@@ -10,6 +10,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QComboBox>
 #include <QLabel>
+#include <QVector>
 
 namespace Ui {
     class gpicontroller;
@@ -30,7 +31,9 @@ class gpicontroller : public QMainWindow
         QSerialPort* port;
         QString readData;
         void make_labels_normal_weight(QLabel* element);
+        QVector<QString> history;
 
+        void request(int timeout);
     private slots:
         void on_buttonSelectVial_clicked();
         void on_buttonRefresh_clicked();
@@ -54,6 +57,8 @@ class gpicontroller : public QMainWindow
         void on_buttonHomeZ_clicked();
         void on_buttonSendArbitrary_clicked();
         void on_arbitrarySerialLine_returnPressed();
+
+        void on_buttonSetDepth_clicked();
 
 private:
         Ui::gpicontroller *ui;

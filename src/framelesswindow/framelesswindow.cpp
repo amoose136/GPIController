@@ -13,6 +13,7 @@
 
 #include <QGraphicsDropShadowEffect>
 #include "framelesswindow.h"
+#include <QSizePolicy>
 
 FramelessWindow::FramelessWindow(QWidget *parent): QWidget(parent)
 {
@@ -65,6 +66,9 @@ void FramelessWindow::setContent(QWidget *w)
   contentLayout.setMargin(0);
   contentLayout.addWidget(w);
   windowContent->setLayout(&contentLayout);
+  windowContent->resize(w->size().width(),w->size().height());
+  this->resize(windowContent->width()+30,\
+               windowTitlebar->size().height()+windowContent->size().height()+30);
 }
 
 void FramelessWindow::setWindowTitle(const QString &text)

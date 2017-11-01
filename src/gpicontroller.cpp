@@ -10,6 +10,8 @@
 #include <QSerialPortInfo>
 #include <QSysInfo>
 #include <QScrollBar>
+#include <QDesktopWidget>
+
 
 QString gpicontroller::getport(){
     QString portname;
@@ -53,6 +55,7 @@ gpicontroller::gpicontroller(QWidget *parent) :
         ui->comBox->setCurrentIndex(ui->comBox->findText("COM3"));
     port=new QSerialPort(this);
     openport(getport());
+    qDebug()<< this->childrenRegion().boundingRect().size();
 }
 
 void gpicontroller::openport(QString portname){
@@ -259,3 +262,13 @@ void gpicontroller::on_buttonSendArbitrary_clicked()
     sendmessage(ui->arbitrarySerialLine->text().simplified()); //simplified removes whitespace from front and back
     ui->arbitrarySerialLine->clear();
 }
+QString gpicontroller::request(int timeout){
+    qDebug() << timeout;
+}
+void gpicontroller::on_buttonSetDepth_clicked()
+{
+    request(10);
+    sendmessage("@SND");
+}
+
+
