@@ -6,7 +6,7 @@
 #include "gpicontroller.h"
 #include "ui_gpicontroller.h"
 #include <QDebug>
-#include <QSerialPort>
+#include <QtSerialPort/QSerialPort>
 #include <QSerialPortInfo>
 #include <QSysInfo>
 
@@ -38,7 +38,13 @@ gpicontroller::gpicontroller(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::gpicontroller)
 {
+
     ui->setupUi(this);
+    connect(ui->spinboxX,SIGNAL(valueChanged(int)),this,SLOT(spinboxX_valueChanged()));
+    connect(ui->spinboxY,SIGNAL(valueChanged(int)),this,SLOT(spinboxY_valueChanged()));
+    connect(ui->spinboxZ,SIGNAL(valueChanged(int)),this,SLOT(spinboxZ_valueChanged()));
+    connect(ui->spinboxNeedle,SIGNAL(valueChanged(double)),this,SLOT(spinboxNeedle_valueChanged()));
+    connect(ui->spinboxSyringe,SIGNAL(valueChanged(int)),this,SLOT(spinboxSyringe_valueChanged()));
     refresh_comBox();
     if (QSysInfo::productType()=="osx" && ui->comBox->findText("/dev/cu.usbserial")+1)
         ui->comBox->setCurrentIndex(ui->comBox->findText("/dev/cu.usbserial"));
@@ -47,6 +53,7 @@ gpicontroller::gpicontroller(QWidget *parent) :
     port=new QSerialPort(this);
     openport(getport());
     QString readData;
+
 }
 
 void gpicontroller::openport(QString portname){
@@ -125,10 +132,109 @@ void gpicontroller::read_data()
 
 void gpicontroller::on_buttonHome_clicked()
 {
-    QString message = "@QRX";
+    sendmessage("@HOME");
+}
+
+void gpicontroller::sendmessage(QString message)
+{
     qDebug() << message;
     ui->console->append(message);
     ui->console->scroll(0,-1);
     message+="\r";
     port->write(message.toLatin1().data(),message.length());
 }
+
+void gpicontroller::on_buttonPark_clicked()
+{
+    sendmessage("@PRK");
+}
+
+void gpicontroller::spinboxX_valueChanged()
+{
+    make_labels_normal_weight(ui->labelX);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxY->setValue(0);
+    ui->spinboxZ->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+}
+void gpicontroller::spinboxY_valueChanged()
+{
+    make_labels_normal_weight(ui->labelY);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxX->setValue(0);
+    ui->spinboxZ->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+}
+void gpicontroller::spinboxZ_valueChanged()
+{
+    make_labels_normal_weight(ui->labelZ);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxY->setValue(0);
+    ui->spinboxX->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+}
+void gpicontroller::spinboxNeedle_valueChanged()
+{
+    ui->spinboxNeedle->blockSignals(true); // to stop from trigging self on the line below the next with "setValue()"
+    make_labels_normal_weight(ui->labelNeedle);
+    if (ui->spinboxNeedle->value()<1) ui->spinboxNeedle->setValue(1); //actual minimum is 1 but I need to signal to user that nothing is sent so it is set to 0
+    ui->spinboxX->setValue(0);
+    ui->spinboxY->setValue(0);
+    ui->spinboxZ->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+}
+void gpicontroller::spinboxSyringe_valueChanged()
+{
+    make_labels_normal_weight(ui->labelSyringe);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxX->setValue(0);
+    ui->spinboxY->setValue(0);
+    ui->spinboxZ->setValue(0);
+}
+void gpicontroller::make_labels_normal_weight(QLabel* element){
+    QFont font=ui->labelX->font();
+    font.setBold(false);
+    ui->labelX->setFont(font);
+    ui->labelY->setFont(font);
+    ui->labelZ->setFont(font);
+    ui->labelNeedle->setFont(font);
+    ui->labelSyringe->setFont(font);
+    font.setBold(true);
+    element->setFont(font);
+}
+
+void gpicontroller::on_buttonMove_clicked()
+{
+    if (ui->spinboxX->value()) sendmessage("@MVX "+QString::number(ui->spinboxX->value()));
+    if (ui->spinboxY->value()) sendmessage("@MVY "+QString::number(ui->spinboxY->value()));
+    if (ui->spinboxZ->value()) sendmessage("@MVZ "+QString::number(ui->spinboxZ->value()));
+    if (ui->spinboxNeedle->value()) sendmessage("@NDL "+QString::number(ui->spinboxNeedle->value()));
+    if (ui->spinboxSyringe->value()) sendmessage("@SYR "+QString::number(ui->spinboxSyringe->value()));
+
+}
+
+void gpicontroller::on_buttonHomeX_clicked()
+{
+    sendmessage("@MVX -1480");
+}
+
+void gpicontroller::on_buttonHomeY_clicked()
+{
+    sendmessage("@MVY -1950");
+}
+
+void gpicontroller::on_buttonHomeZ_clicked()
+{
+    sendmessage("@MVZ -3500");
+}
+
+

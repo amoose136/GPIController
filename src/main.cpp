@@ -1,7 +1,7 @@
 #include "gpicontroller.h"
 #include <QApplication>
 #include <QDebug>
-#include <QSerialPort>
+#include <QtSerialPort/QSerialPort>
 #include "DarkStyle.h"
 #include "framelesswindow.h"
 

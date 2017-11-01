@@ -7,8 +7,10 @@
 #define GPICONTROLLER_H
 
 #include <QMainWindow>
-#include <QSerialPort>
+#include <QtSerialPort/QSerialPort>
 #include <QComboBox>
+#include <QLabel>
+
 namespace Ui {
     class gpicontroller;
 }
@@ -27,6 +29,7 @@ class gpicontroller : public QMainWindow
         void refresh_comBox();
         QSerialPort* port;
         QString readData;
+        void make_labels_normal_weight(QLabel* element);
 
     private slots:
         void on_buttonSelectVial_clicked();
@@ -35,13 +38,28 @@ class gpicontroller : public QMainWindow
         void read_data();
 
         void on_buttonHome_clicked();
+        void sendmessage(QString message);
+
+        void on_buttonPark_clicked();
+
+        void spinboxX_valueChanged();
+        void spinboxY_valueChanged();
+        void spinboxZ_valueChanged();
+        void spinboxNeedle_valueChanged();
+        void spinboxSyringe_valueChanged();
+
+        void on_buttonMove_clicked();
+
+        void on_buttonHomeX_clicked();
+
+        void on_buttonHomeY_clicked();
+
+        void on_buttonHomeZ_clicked();
 
 private:
         Ui::gpicontroller *ui;
         QString portname;
-
 };
-
 
 
 #endif // GPICONTROLLER_H
