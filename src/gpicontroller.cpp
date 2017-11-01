@@ -128,7 +128,7 @@ void gpicontroller::on_buttonConnect_clicked()
 void gpicontroller::read_data()
 {
     readData.append(QString(port->readAll()));
-    if (readData.endsWith("\n") || readData.endsWith("\r")){
+    if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
         ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
         readData.clear();
     }
