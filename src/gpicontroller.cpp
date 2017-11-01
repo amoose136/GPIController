@@ -238,3 +238,13 @@ void gpicontroller::on_buttonHomeZ_clicked()
 }
 
 
+
+void gpicontroller::on_arbitrarySerialLine_returnPressed()
+{
+    on_buttonSendArbitrary_clicked();
+}
+
+void gpicontroller::on_buttonSendArbitrary_clicked()
+{
+    sendmessage(ui->arbitrarySerialLine->text().simplified()); //simplified removes whitespace from front and back
+}

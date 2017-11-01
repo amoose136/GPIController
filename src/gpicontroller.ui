@@ -573,13 +573,13 @@
      <string>Temperature</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>280</x>
       <y>50</y>
       <width>71</width>
-      <height>28</height>
+      <height>31</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -588,6 +588,9 @@
      </property>
      <item>
       <widget class="QPushButton" name="buttonHomeX">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="font">
         <font>
          <family>Arial</family>
@@ -613,6 +616,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="buttonHomeY">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="font">
         <font>
          <family>Arial</family>
@@ -638,6 +644,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="buttonHomeZ">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="font">
         <font>
          <family>Arial</family>
@@ -663,7 +672,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -711,7 +720,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="arbitrarySerialLine"/>
        </item>
        <item>
         <widget class="QPushButton" name="buttonSendArbitrary">

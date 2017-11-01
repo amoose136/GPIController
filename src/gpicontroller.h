@@ -49,12 +49,11 @@ class gpicontroller : public QMainWindow
         void spinboxSyringe_valueChanged();
 
         void on_buttonMove_clicked();
-
         void on_buttonHomeX_clicked();
-
         void on_buttonHomeY_clicked();
-
         void on_buttonHomeZ_clicked();
+        void on_buttonSendArbitrary_clicked();
+        void on_arbitrarySerialLine_returnPressed();
 
 private:
         Ui::gpicontroller *ui;
