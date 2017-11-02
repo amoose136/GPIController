@@ -141,6 +141,7 @@ void gpicontroller::read_data()
     }
     QScrollBar *vsb = ui->console->verticalScrollBar();
     vsb->setValue(vsb->maximum());
+   
 }
 
 void gpicontroller::on_buttonHome_clicked()

@@ -22,28 +22,34 @@ class gpicontroller : public QMainWindow
 
     public:
         explicit gpicontroller(QWidget *parent = 0);
-        void selectVial();
-        ~gpicontroller();
-        void openport(QString portname);
-        QString getport();
-        QSerialPortInfo* portinfo;
-        void refresh_comBox();
-        QSerialPort* port;
-        QString readData;
-        void make_labels_normal_weight(QLabel* element);
-        QVector<QString> history;
 
+        ~gpicontroller();
+
+        QString readData;
+        QSerialPortInfo* portinfo;
+        QVector<QString> sendHistory;
+        QSerialPort* port;
+        bool readingState=false;
+        QVector<QString> readBuffer;
+        QVector<Qstring> sendBuffer;
+
+        void open_port(QString portname);
+        QString get_port();
+        void refresh_comBox();
+        void select_vial();
+        void make_labels_normal_weight(QLabel* element);
         void request(int timeout);
+
+
+
     private slots:
-        void on_buttonSelectVial_clicked();
-        void on_buttonRefresh_clicked();
-        void on_buttonConnect_clicked();
+
         void read_data();
 
         void on_buttonHome_clicked();
-        void sendmessage(QString message);
+        void send_message(QString message);
 
-        void on_buttonPark_clicked();
+
 
         void spinboxX_valueChanged();
         void spinboxY_valueChanged();
@@ -51,6 +57,10 @@ class gpicontroller : public QMainWindow
         void spinboxNeedle_valueChanged();
         void spinboxSyringe_valueChanged();
 
+        void on_buttonSelectVial_clicked();
+        void on_buttonRefresh_clicked();
+        void on_buttonConnect_clicked();
+        void on_buttonPark_clicked();
         void on_buttonMove_clicked();
         void on_buttonHomeX_clicked();
         void on_buttonHomeY_clicked();
