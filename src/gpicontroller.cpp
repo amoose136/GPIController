@@ -13,13 +13,15 @@
 #include <QDesktopWidget>
 
 
-QString gpicontroller::get_port(){
+QString gpicontroller::get_port()
+{
     QString portname;
     portname=ui->comBox->currentText();
     return portname;
 }
 
-void gpicontroller::refresh_comBox(){
+void gpicontroller::refresh_comBox()
+{
     QString current=ui->comBox->currentText();
     ui->comBox->clear();
     for (int i=0; i<QSerialPortInfo::availablePorts().length();i++){
@@ -41,7 +43,6 @@ gpicontroller::gpicontroller(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::gpicontroller)
 {
-
     ui->setupUi(this);
     connect(ui->spinboxX,SIGNAL(valueChanged(int)),this,SLOT(spinboxX_valueChanged()));
     connect(ui->spinboxY,SIGNAL(valueChanged(int)),this,SLOT(spinboxY_valueChanged()));
@@ -58,22 +59,25 @@ gpicontroller::gpicontroller(QWidget *parent) :
     qDebug()<< this->childrenRegion().boundingRect().size();
 }
 
-void gpicontroller::open_port(QString portname){
+void gpicontroller::open_port(QString portname)
+{
     port->setPortName(portname);
     port->open(QIODevice::ReadWrite);
-    if (port->error()==QSerialPort::PermissionError || this->port->error()==QSerialPort::OpenError) {
+    if (port->error()==QSerialPort::PermissionError || this->port->error()==QSerialPort::OpenError)
+    {
         port->close();
         port->clearError();
         port->open(QIODevice::ReadWrite);
     }
     // Check the validity of the port
-    if ( !port->error()==QSerialPort::NoError ) {
-
+    if ( !port->error()==QSerialPort::NoError )
+    {
         qDebug() << "\nError: " << port->portName() << " port can't be opened ...";
         ui->console->append(port->portName()+" port can't be opened ...");
         ui->labelComstate->setText("Disconnected");
     }
-    else {
+    else
+    {
         qDebug() << port->portName() << " port has been opened successfully ...";
         ui->console->append(port->portName()+" port has been opened successfully ...");
         port->setBaudRate(QSerialPort::Baud9600);
@@ -93,7 +97,8 @@ void gpicontroller::open_port(QString portname){
 }
 
 
-void gpicontroller::select_vial(){
+void gpicontroller::select_vial()
+{
     QString message = "@GTV ";
     message+=ui->spinboxSelectVial->cleanText();
     qDebug() << message;
@@ -141,6 +146,7 @@ void gpicontroller::read_data()
     }
     QScrollBar *vsb = ui->console->verticalScrollBar();
     vsb->setValue(vsb->maximum());
+
 }
 
 void gpicontroller::on_buttonHome_clicked()
@@ -150,21 +156,14 @@ void gpicontroller::on_buttonHome_clicked()
 
 void gpicontroller::send_message(QString message)
 {
-    if (readingState==false)
-    {
-        qDebug() << message;
-        ui->console->append(message);
-        QScrollBar *vsb = ui->console->verticalScrollBar();
-        QScrollBar *hsb = ui->console->horizontalScrollBar();
-        vsb->setValue(vsb->maximum());
-        hsb->setValue(hsb->minimum());
-        message+="\r";
-        port->write(message.toLatin1().data(),message.length());
-    }
-    else
-    {
-        sendBuffer.append(message);
-    }
+    qDebug() << message;
+    ui->console->append(message);
+    QScrollBar *vsb = ui->console->verticalScrollBar();
+    QScrollBar *hsb = ui->console->horizontalScrollBar();
+    vsb->setValue(vsb->maximum());
+    hsb->setValue(hsb->minimum());
+    message+="\r";
+    port->write(message.toLatin1().data(),message.length());
 }
 
 void gpicontroller::on_buttonPark_clicked()

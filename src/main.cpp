@@ -4,6 +4,7 @@
 #include <QtSerialPort/QSerialPort>
 #include "DarkStyle.h"
 #include "framelesswindow.h"
+#include "serialbuffer.h"
 
 int main(int argc, char *argv[])
 {

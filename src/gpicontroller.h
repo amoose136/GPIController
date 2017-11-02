@@ -29,9 +29,6 @@ class gpicontroller : public QMainWindow
         QSerialPortInfo* portinfo;
         QVector<QString> sendHistory;
         QSerialPort* port;
-        bool readingState=false;
-        QVector<QString> readBuffer;
-        QVector<Qstring> sendBuffer;
 
         void open_port(QString portname);
         QString get_port();
