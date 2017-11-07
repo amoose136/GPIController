@@ -2,20 +2,27 @@
 #include <QtSerialPort/QSerialPort>
 #include <QVector>
 #include <QString>
-#include <serialbuffer.h>
-#include <gpicontroller.h>
+#include "serialbuffer.h"
+#include "gpicontroller.h"
 
-command::command(QString N, T* r){
-    return_var=r;
-    command_name=N;
-}
+//template<class T>
+//int serialBuffer::append(QString c,T* p)
+//{
+//    command<T> comm;
+//    if (commandList.length()<100){
+//        commandList.append(comm);
+//        return 0;
+//    }
+//    else
+//        return -1;//buffer out of bounds
+//}
 
-serialBuffer::update_buffer(QString data){
-    if (readInProgress)
-    {
-        lastSent.return_var=data;
+//int serialBuffer::data_recieved(QString data)
+//{
+//    if (waiting)
+//    {
+//     last;
+//    }
+//    else{};
+//}
 
-        lastSent=bufferList.back();
-        send_message(lastSent.command_name);
-    }
-}

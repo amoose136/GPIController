@@ -12,7 +12,6 @@
 #include <QScrollBar>
 #include <QDesktopWidget>
 
-
 QString gpicontroller::get_port()
 {
     QString portname;
@@ -138,10 +137,7 @@ void gpicontroller::read_data()
     readData.append(QString(port->readAll()));
     if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
         ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
-        if (readingState==true)
-        {
-            readBuffer.append(readData.simplified());
-        }
+        buffer.append(readData.simplified());
         readData.clear();
     }
     QScrollBar *vsb = ui->console->verticalScrollBar();

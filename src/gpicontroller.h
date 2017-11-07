@@ -11,6 +11,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QVector>
+#include "serialbuffer.h"
 
 namespace Ui {
     class gpicontroller;
@@ -70,6 +71,7 @@ class gpicontroller : public QMainWindow
 private:
         Ui::gpicontroller *ui;
         QString portname;
+        serialBuffer buffer;
 };
 
 

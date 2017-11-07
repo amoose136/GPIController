@@ -5,28 +5,46 @@
 #include <QtSerialPort/QSerialPort>
 #include <QVector>
 #include <QString>
-
-template <typename T>
-class command
+class generic_command
 {
+    protected:
+        //possible datatypes:
+        QString name;
     public:
-        T* return_var;
-        QString command_name;
-        command(QString, T*);
+        //Instiation format is command name, empty variable pointer that will later contain data
+        generic_command(QString n){
+            name=n;
+        }
+        virtual ~generic_command();
 };
 
-class serialBuffer
+template <class T>
+class command : generic_command{
+    protected:
+        T* data;
+    public:
+        command(QString n,T* d) : generic_command(n){
+            data=d;
+        }
+
+        T get_val();
+        int set_val(T); //returns zero on success
+};
+
+class serialBuffer : QObject
 {
     Q_OBJECT
     public:
         serialBuffer();
         ~serialBuffer();
-        QVector<command<void*>> bufferList; //hopefully void* would except for example `int*` or `bool*`
-        command<void*> lastSent;
-    slots:
-        void update_buffer(QString data);
-    private:
-        bool readInProgress=false;
+        virtual ~Communicate() {};
+        bool waiting=false;
+        QVector<generic_command> commandList; //command_name,type
+        generic_command last;
+        int data_recieved(QString);
+//        template<class T>
+//        int append(QString,T*);
+
 };
 
 

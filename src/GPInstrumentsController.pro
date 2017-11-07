@@ -20,14 +20,14 @@ SOURCES     += \
                 gpicontroller.cpp \
                 framelesswindow/framelesswindow.cpp \
                 framelesswindow/windowdragger.cpp \
-    serialbuffer.cpp
+                serialbuffer.cpp
 
 HEADERS     += \
                 gpicontroller.h \
                 DarkStyle.h \
                 framelesswindow/windowdragger.h \
                 framelesswindow/framelesswindow.h \
-    serialbuffer.h
+                serialbuffer.h
 
 FORMS       += \
                 gpicontroller.ui \
