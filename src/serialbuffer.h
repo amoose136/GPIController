@@ -36,14 +36,13 @@ class serialBuffer : QObject
     Q_OBJECT
     public:
         serialBuffer();
-        ~serialBuffer();
-        virtual ~Communicate() {};
+
         bool waiting=false;
         QVector<generic_command> commandList; //command_name,type
         generic_command last;
         int data_recieved(QString);
-//        template<class T>
-//        int append(QString,T*);
+        template<class T>
+        int append(QString,T*);
 
 };
 

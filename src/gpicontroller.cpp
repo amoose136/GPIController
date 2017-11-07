@@ -137,7 +137,8 @@ void gpicontroller::read_data()
     readData.append(QString(port->readAll()));
     if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
         ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
-        buffer.append(readData.simplified());
+        int* p=new int;
+        buffer.append(readData.simplified(),p);
         readData.clear();
     }
     QScrollBar *vsb = ui->console->verticalScrollBar();
