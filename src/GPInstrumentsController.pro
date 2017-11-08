@@ -27,7 +27,8 @@ HEADERS     += \
                 DarkStyle.h \
                 framelesswindow/windowdragger.h \
                 framelesswindow/framelesswindow.h \
-                serialbuffer.h
+                serialBuffer.h
+
 
 FORMS       += \
                 gpicontroller.ui \

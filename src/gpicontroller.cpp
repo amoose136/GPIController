@@ -141,9 +141,8 @@ void gpicontroller::read_data()
         buffer.append(readData.simplified(),p);
         readData.clear();
     }
-    QScrollBar *vsb = ui->console->verticalScrollBar();
+    QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
     vsb->setValue(vsb->maximum());
-
 }
 
 void gpicontroller::on_buttonHome_clicked()
