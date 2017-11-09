@@ -11,7 +11,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QVector>
-#include "serialbuffer.h"
+#include "serialBuffer.h"
 
 namespace Ui {
     class gpicontroller;
@@ -25,7 +25,7 @@ class gpicontroller : public QMainWindow
         explicit gpicontroller(QWidget *parent = 0);
 
         ~gpicontroller();
-
+        serialBuffer buffer;
         QString readData;
         QSerialPortInfo* portinfo;
         QVector<QString> sendHistory;
@@ -68,10 +68,10 @@ class gpicontroller : public QMainWindow
 
         void on_buttonSetDepth_clicked();
 
-private:
+    private:
         Ui::gpicontroller *ui;
         QString portname;
-        serialBuffer buffer;
+
 };
 
 

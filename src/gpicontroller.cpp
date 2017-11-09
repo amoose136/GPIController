@@ -11,6 +11,7 @@
 #include <QSysInfo>
 #include <QScrollBar>
 #include <QDesktopWidget>
+#include "serialbuffer.h"
 
 QString gpicontroller::get_port()
 {
@@ -137,8 +138,8 @@ void gpicontroller::read_data()
     readData.append(QString(port->readAll()));
     if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
         ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
-        int* p=new int;
-        buffer.append(readData.simplified(),p);
+//        int* p=new int;
+//        buffer.append(readData.simplified(),p);
         readData.clear();
     }
     QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
@@ -159,7 +160,10 @@ void gpicontroller::send_message(QString message)
     vsb->setValue(vsb->maximum());
     hsb->setValue(hsb->minimum());
     message+="\r";
-    port->write(message.toLatin1().data(),message.length());
+//    port->write(message.toLatin1().data(),message.length());
+    int *r=new int;
+    buffer.append(message,r);
+    buffer.last.set_val("0");
 }
 
 void gpicontroller::on_buttonPark_clicked()
