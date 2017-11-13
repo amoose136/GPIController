@@ -25,15 +25,21 @@ template<>
 float command<float>::auto_convert(QString d){
     return d.toFloat();
 }
-
-int serialBuffer::data_recieved(QString data)
+int serialBuffer::send_next(){
+    if (commandList.length()!=0){
+        last=commandList.back();
+        return 0;
+   }
+   return -1;
+}
+void serialBuffer::data_recieved(QString data)
 {
     if (waiting)
     {
-     last.set_val(data);
-     return 0;
+     last->set_val(data);
+     waiting=false;
+     send_next();
+     emit processed_data(0);
     }
-    else
-        return 0;
+    emit processed_data(-1);
 }
-

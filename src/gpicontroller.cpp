@@ -94,6 +94,7 @@ void gpicontroller::open_port(QString portname)
         ui->labelComstate->setText("Connected");
     }
     connect(port, &QSerialPort::readyRead, this, &gpicontroller::read_data);
+    connect(this, SIGNAL(data_was_read(QString)), buffer, SLOT(data_recieved(QString)));
 }
 
 
@@ -138,7 +139,7 @@ void gpicontroller::read_data()
     readData.append(QString(port->readAll()));
     if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
         ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
-//        int* p=new int;
+        emit data_was_read(readData.simplified());
 //        buffer.append(readData.simplified(),p);
         readData.clear();
     }
@@ -162,8 +163,9 @@ void gpicontroller::send_message(QString message)
     message+="\r";
 //    port->write(message.toLatin1().data(),message.length());
     int *r=new int;
-    buffer.append(message,r);
-    buffer.last.set_val("0");
+    buffer->append(message,r);
+    buffer->last->set_val("0");
+
 }
 
 void gpicontroller::on_buttonPark_clicked()

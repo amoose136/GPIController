@@ -25,7 +25,7 @@ class gpicontroller : public QMainWindow
         explicit gpicontroller(QWidget *parent = 0);
 
         ~gpicontroller();
-        serialBuffer buffer;
+        serialBuffer* buffer;
         QString readData;
         QSerialPortInfo* portinfo;
         QVector<QString> sendHistory;
@@ -37,7 +37,10 @@ class gpicontroller : public QMainWindow
         void select_vial();
         void make_labels_normal_weight(QLabel* element);
         void request(int timeout);
+        void send_message(QString message);
 
+    signals:
+        void data_was_read(QString);
 
 
     private slots:
@@ -45,9 +48,6 @@ class gpicontroller : public QMainWindow
         void read_data();
 
         void on_buttonHome_clicked();
-        void send_message(QString message);
-
-
 
         void spinboxX_valueChanged();
         void spinboxY_valueChanged();
@@ -71,6 +71,7 @@ class gpicontroller : public QMainWindow
     private:
         Ui::gpicontroller *ui;
         QString portname;
+
 
 };
 
