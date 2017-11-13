@@ -5,57 +5,65 @@
 #include <QVector>
 #include <QtCore>
 #include <QObject>
-#include <typeinfo>
 
-class generic_command
-{   protected:
+class SignalsSlots : public QObject //generic class to make the command class play nice with qt
+{
+    Q_OBJECT
+    public:
+        explicit SignalsSlots(QObject *parent = 0) :
+        QObject(parent) {}
+    public slots:
+        virtual void writeAsync(int) {}
+        virtual void writeAsync(float) {}
+        virtual void writeAsync(double) {}
+        virtual void writeAsync(bool) {}
+        virtual void writeAsync(QString) {}
+
+    signals:
+        void readAsynkPolledChanged();
+        void readAsynkPolledChanged(int value);
+        void readAsynkPolledChanged(float value);
+        void readAsynkPolledChanged(double value);
+        void readAsynkPolledChanged(bool state);
+};
+
+class generic_command //wrapper class to get rid of template notation in vector so `vector<command<some_fixed_type>> commandlist` becomes `vector<command> commandlist`
+{
+    protected:
         QString name;
     public:
+        generic_command(){}//empty object
         generic_command(const QString n){
             name=n;
-        };
-        generic_command(){};
-        virtual void set_val(QString){};
-        virtual ~generic_command(){};
+        }
+        virtual void set_val(QString){}
+        virtual ~generic_command(){}
 };
 
 template <class T>
-class command : public generic_command{
+class command : public SignalsSlots,public generic_command{
     protected:
         T* data;
         QString type;
     public:
+        T auto_convert(QString);
+        void set_val(QString d) override {
+            T data_con=auto_convert(d);
+            *data=data_con;
+            qDebug() << "ahh";
+        }
+        void writeAsync(QString value) override {
+            set_val(value);
+        }
         command(const QString n,T* d): generic_command(n){
             data=d;
             type=typeid(T).name();
             qDebug()<<"command created "<<name;
         }
 
-//        T get_val();
-        T auto_convert(QString d)
-        {
-            QString n=typeid(T).name();
-            if (n==typeid(int).name()){
-                return d.toInt();
-            }
-            else if (n==typeid(bool).name())
-            {
-                if (d.toLower()=="true"||d=="1")
-                        return true;
-                    else
-                        return false;
-            }
-            else if (n==typeid(double).name())
-                    return d.toDouble();
-            else
-                return *data;
-        };
-        void set_val(QString d) override {
-            T data_con=auto_convert(d);
-            *data=data_con;
-            qDebug() << "ahh";
-        }; //returns zero on success
-};
+ };
+
+
 
 
 class serialBuffer : public QObject
@@ -70,7 +78,7 @@ class serialBuffer : public QObject
             commandList=other.commandList;
             last=other.last;
         };
-        virtual ~serialBuffer(){};
+        virtual ~serialBuffer(){}
 
         //member data items
         bool waiting; // the state of the read/write buffer
@@ -83,7 +91,7 @@ class serialBuffer : public QObject
         template<class T>
         int append(QString c,T* p)
         {
-            if (commandList.length()<100)
+            if (commandList.length()<10)
             {
                 command<T>* comm = new command<T>(c,p);
                 commandList.push_back(comm);
@@ -93,8 +101,20 @@ class serialBuffer : public QObject
             else
                 return -1;//buffer out of bounds
         };
-};
+        template<class T,class Functor>
+        int append(QString c,T* p,Functor F) {
+            if (append<T>(c,p)==0) {
+                F(0);
+                return 0;
+            }
+            else {
+                F(-1);
+                return -1;//buffer out of bounds
+            }
 
+        }
+
+};
 
 
 #endif // SERIALBUFFER_H
