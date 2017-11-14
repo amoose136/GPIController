@@ -26,17 +26,18 @@ float command<float>::auto_convert(QString d){
     return d.toFloat();
 }
 int serialBuffer::send_next(){
-    if (commandList.length()!=0){
-        last=commandList.back();
+//    if (commandList.length()!=0){
+//        last=commandList.back();
         return 0;
-   }
-   return -1;
+//   }
+//   return -1;
 }
 void serialBuffer::data_recieved(QString data)
 {
     if (waiting)
     {
-     last->set_val(data);
+//     last->set_val(data);
+     qDebug()<< data;
      waiting=false;
      send_next();
      emit processed_data(0);

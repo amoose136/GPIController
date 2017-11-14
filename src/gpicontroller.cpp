@@ -93,8 +93,10 @@ void gpicontroller::open_port(QString portname)
         hsb->setValue(hsb->minimum());
         ui->labelComstate->setText("Connected");
     }
-    connect(port, &QSerialPort::readyRead, this, &gpicontroller::read_data);
-    connect(this, SIGNAL(data_was_read(QString)), buffer, SLOT(data_recieved(QString)));
+//    connect(port, &QSerialPort::readyRead, this, &gpicontroller::read_data);
+//    connect(port, SIGNAL(readyRead()), this, SLOT(read_data()));
+
+//    connect(this, SIGNAL(data_was_read(QString)), buffer, SLOT(data_recieved(QString)));
 }
 
 
@@ -163,8 +165,8 @@ void gpicontroller::send_message(QString message)
     message+="\r";
 //    port->write(message.toLatin1().data(),message.length());
     int *r=new int;
-    buffer->append(message,r);
-    buffer->last->set_val("0");
+    buffer->append("test",r);
+//    buffer->last->set_val("0");
 
 }
 

@@ -26,15 +26,19 @@ class SignalsSlots : public QObject //generic class to make the command class pl
         void readAsynkPolledChanged(bool state);
 };
 
-class generic_command : public QObject //wrapper class to get rid of template notation in vector so `vector<command<some_fixed_type>> commandlist` becomes `vector<command> commandlist`
+class generic_command //wrapper class to get rid of template notation in vector so `vector<command<some_fixed_type>> commandlist` becomes `vector<command> commandlist`
 {
-    Q_OBJECT
-    protected:
-        QString name;
     public:
+        QString name;
         generic_command(){}//empty object
         generic_command(const QString n){
             name=n;
+        }
+        //copy constructor required by vector
+        generic_command(const generic_command &other);
+        //assignment operator required by vector
+        generic_command &operator=(generic_command &other){
+            return other;
         }
 //        virtual void* get_val();
         virtual void set_val(QString){}
@@ -47,11 +51,17 @@ class command : public SignalsSlots,public generic_command{
         T* data;
         QString type;
     public:
-        command(const QString n,T* d): generic_command(n){
+        QString name;
+        command():generic_command(){}
+        command(const QString &n,T* d): generic_command(n){
             data=d;
             type=typeid(T).name();
+            name=n;
             qDebug()<<"command created "<<name;
         }
+        //copy constructor required by vector
+        command(const command &other);
+        //assignment operator required by vector
         T auto_convert(QString);
         void set_val(QString d) override {
             T data_con=auto_convert(d);
@@ -78,43 +88,53 @@ class serialBuffer : public QObject
         //constructors
         explicit serialBuffer():QObject(){
             waiting=false;
+            last=new generic_command;
         };
         explicit serialBuffer(const serialBuffer &other):QObject(){ //copying
             waiting=other.waiting;
             commandList=other.commandList;
             last=other.last;
+            commandList2=other.commandList2;
         };
         virtual ~serialBuffer(){} //destructor
 
         //member data items
         bool waiting; // the state of the read/write buffer
-        QVector<generic_command*> commandList; //vector of (command_name,pointer to data)
+        QVector<generic_command> commandList; //vector of (command_name,pointer to data)
         generic_command* last; // the last command and data item pair
-
+        QVector<command<int>> commandList2;
 
         //member functions
         template<class T>
-        int append(QString c,T* p)
+        int append(const QString &c,T* p)
         {
-            if (commandList.length()<10)
-            {
-                command<T>* comm = new command<T>(c,p);
-                commandList.push_back(comm);
-                last=commandList.back();
+//            if (commandList.)
+//            {
+//                command<T>(c,p);
+                command<T> co (c,p);
+                command<T> cn (c+"e",p);
+                qDebug()<<co.name <<cn.name;
+                co=cn;
+                QVector<command<T>> d;
+                d.push_back(co);
+                qDebug()<<co.name <<cn.name;
+//                commandList2[0]=co;
+//                last=commandList.back();
                 return 0;
-            }
-            else
-                return -1;//buffer out of bounds
+//            }
+//            else
+//                return -1;//buffer out of bounds
         };
-        template<class T>
-        int append(command<T> comm){
-            if (commandList.length()<10)
-            {
-                commandList.push_back(comm);
-            }
-            else
-                return -1;//buffer out of bounds
-        }
+//        template<class T>
+//        int append(command<T> &comm){
+////            if (commandList.length()<10)
+////            {
+//                commandList.push_back(comm);
+//                return 0;
+////            }
+////            else
+////                return -1;//buffer out of bounds
+//        }
         int send_next();
     signals:
         void send_data(QString);
