@@ -111,21 +111,21 @@ class serialBuffer : public QObject
 //            if (commandList.)
 //            {
 //                command<T>(c,p);
-                command<T> co (c,p);
-                command<T> cn (c+"e",p);
-                qDebug()<<co.name <<cn.name;
-                co=cn;
-                QVector<command<T>> d;
-                d.push_back(co);
-                qDebug()<<co.name <<cn.name;
+//                command<T> co (c,p);
+//                command<T> cn (c+"e",p);
+//                qDebug()<<co.name <<cn.name;
+//                co=cn;
+//                QVector<command<T>> d;
+//                d.push_back(co);
+//                qDebug()<<co.name <<cn.name;
 //                commandList2[0]=co;
 //                last=commandList.back();
                 return 0;
 //            }
 //            else
 //                return -1;//buffer out of bounds
-        };
-//        template<class T>
+        }
+//        template<class T>1
 //        int append(command<T> &comm){
 ////            if (commandList.length()<10)
 ////            {
