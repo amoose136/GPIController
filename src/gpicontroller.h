@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QVector>
 #include "serialBuffer.h"
+#include <QTimer>
 
 namespace Ui {
     class gpicontroller;
@@ -30,22 +31,26 @@ class gpicontroller : public QMainWindow
         QSerialPortInfo* portinfo;
         QVector<QString> sendHistory;
         QSerialPort* port;
+        void *timeout_sig;
+        bool setting_serial=false;
+        int serialNumber=11111;
 
         void open_port(QString portname);
         QString get_port();
         void refresh_comBox();
         void select_vial();
         void make_labels_normal_weight(QLabel* element);
-        void request(int timeout);
         void send_message(QString message);
 
     signals:
         void data_was_read(QString);
 
-
     private slots:
-
+        void update_temp_buttons(QString);
         void read_data();
+        void set_needle_depth(QString);
+        void needle_timeout();
+        void set_temperature_bar(QString);
 
         void on_buttonHome_clicked();
 
@@ -68,7 +73,21 @@ class gpicontroller : public QMainWindow
 
         void on_buttonSetDepth_clicked();
 
-    private:
+        void on_buttonGoToDepthSetpoint_clicked();
+
+        void on_buttonSetSerialNumber_clicked();
+
+        void on_buttonHomeNeedle_clicked();
+
+        void on_buttonRefreshTempState_clicked();
+
+        void on_buttonSetTemp_clicked();
+
+        void on_buttonTempOn_clicked();
+
+        void on_buttonTempOff_clicked();
+
+private:
         Ui::gpicontroller *ui;
         QString portname;
 

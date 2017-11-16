@@ -12,6 +12,7 @@
 #include <QScrollBar>
 #include <QDesktopWidget>
 #include "serialbuffer.h"
+#include <QTimer>
 
 QString gpicontroller::get_port()
 {
@@ -47,7 +48,7 @@ gpicontroller::gpicontroller(QWidget *parent) :
     connect(ui->spinboxX,SIGNAL(valueChanged(int)),this,SLOT(spinboxX_valueChanged()));
     connect(ui->spinboxY,SIGNAL(valueChanged(int)),this,SLOT(spinboxY_valueChanged()));
     connect(ui->spinboxZ,SIGNAL(valueChanged(int)),this,SLOT(spinboxZ_valueChanged()));
-    connect(ui->spinboxNeedle,SIGNAL(valueChanged(double)),this,SLOT(spinboxNeedle_valueChanged()));
+    connect(ui->spinboxNeedle,SIGNAL(valueChanged(int)),this,SLOT(spinboxNeedle_valueChanged()));
     connect(ui->spinboxSyringe,SIGNAL(valueChanged(int)),this,SLOT(spinboxSyringe_valueChanged()));
     refresh_comBox();
     if (QSysInfo::productType()=="osx" && ui->comBox->findText("/dev/cu.usbserial")+1)
@@ -57,6 +58,7 @@ gpicontroller::gpicontroller(QWidget *parent) :
     port=new QSerialPort(this);
     open_port(get_port());
     qDebug()<< this->childrenRegion().boundingRect().size();
+    QTimer *timer = new QTimer(this);
 }
 
 void gpicontroller::open_port(QString portname)
@@ -94,8 +96,7 @@ void gpicontroller::open_port(QString portname)
         ui->labelComstate->setText("Connected");
     }
 //    connect(port, &QSerialPort::readyRead, this, &gpicontroller::read_data);
-//    connect(port, SIGNAL(readyRead()), this, SLOT(read_data()));
-
+    connect(port, SIGNAL(readyRead()), this, SLOT(read_data()));
 //    connect(this, SIGNAL(data_was_read(QString)), buffer, SLOT(data_recieved(QString)));
 }
 
@@ -139,11 +140,29 @@ void gpicontroller::on_buttonConnect_clicked()
 void gpicontroller::read_data()
 {
     readData.append(QString(port->readAll()));
-    if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
-        ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
-        emit data_was_read(readData.simplified());
-//        buffer.append(readData.simplified(),p);
-        readData.clear();
+    if (!setting_serial)
+    {
+        if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
+            ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
+            emit data_was_read(readData.simplified());
+    //        buffer.append(readData.simplified(),p);
+            readData.clear();
+        }
+    }
+    else
+    {
+        if (readData.simplified()=="Enter S/N (5 digits)"){
+            ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
+            emit data_was_read(readData.simplified());
+    //        buffer.append(readData.simplified(),p);
+            readData.clear();
+            setting_serial=false;
+            QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
+            vsb->setValue(vsb->maximum());
+            send_message(QString::number(serialNumber));
+            qDebug() << "now not setting serial";
+            send_message("@GSIP 1");
+        }
     }
     QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
     vsb->setValue(vsb->maximum());
@@ -162,8 +181,11 @@ void gpicontroller::send_message(QString message)
     QScrollBar *hsb = ui->console->horizontalScrollBar();
     vsb->setValue(vsb->maximum());
     hsb->setValue(hsb->minimum());
+    if (message=="#"){
+            setting_serial=true;
+    }
     message+="\r";
-//    port->write(message.toLatin1().data(),message.length());
+    port->write(message.toLatin1().data(),message.length());
     int *r=new int;
     buffer->append("test",r);
 //    buffer->last->set_val("0");
@@ -209,8 +231,6 @@ void gpicontroller::spinboxNeedle_valueChanged()
 {
     ui->spinboxNeedle->blockSignals(true); // to stop from trigging self on the line below the next with "setValue()"
     make_labels_normal_weight(ui->labelNeedle);
-    if (ui->spinboxNeedle->value()<1) ui->spinboxNeedle->setValue(1); //actual minimum is 1 but I need to signal to user that nothing is sent so it is set to 0
-    ui->spinboxX->setValue(0);
     ui->spinboxY->setValue(0);
     ui->spinboxZ->setValue(0);
     ui->spinboxSyringe->setValue(0);
@@ -275,13 +295,92 @@ void gpicontroller::on_buttonSendArbitrary_clicked()
     send_message(ui->arbitrarySerialLine->text().simplified()); //simplified removes whitespace from front and back
     ui->arbitrarySerialLine->clear();
 }
-void gpicontroller::request(int timeout){
-    qDebug() << timeout;
+void gpicontroller::set_needle_depth(QString data)
+{
+    qDebug()<<"@SND "<<data;
+    float data_s=data.toFloat()*.05;
+    qDebug()<<"@SND "+QString::number(data_s);
+    send_message("@SND "+QString::number(data_s));
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
+}
+void gpicontroller::needle_timeout()
+{
+//    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
+//
+//    timer->stop();
+    qDebug()<<"timed out!";
+    ui->console->append("<div style='color:red'>timed out!</div>");
 }
 void gpicontroller::on_buttonSetDepth_clicked()
 {
-    request(10);
-    send_message("@SND");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
+//    timeout_sig=&needle_timeout;
+//    QTimer::singleShot(1000, this, SLOT(needle_timeout()));
+    send_message("@RDS");
 }
 
 
+
+void gpicontroller::on_buttonGoToDepthSetpoint_clicked()
+{
+    send_message("@NDL 99");
+}
+
+void gpicontroller::on_buttonSetSerialNumber_clicked()
+{
+    serialNumber=ui->spinBoxSerialNumber->value();
+    setting_serial=true;
+    qDebug()<<"setting serial";
+    send_message("#");
+}
+
+void gpicontroller::on_buttonHomeNeedle_clicked()
+{
+    send_message("@NDL 0");
+}
+
+void gpicontroller::on_buttonRefreshTempState_clicked()
+{
+    send_message("@GSIP 12");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_temp_buttons(QString)));
+}
+void gpicontroller::update_temp_buttons(QString data)
+{
+    if (data=="OFF"){
+        ui->buttonTempOff->setEnabled(false);
+        ui->buttonTempOn->setEnabled(true);
+    }
+    else {
+        ui->buttonTempOff->setEnabled(true);
+        ui->buttonTempOn->setEnabled(false);
+    }
+    qDebug() << data;
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_temp_buttons(QString)));
+    send_message("@RTT");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_temperature_bar(QString)));
+}
+void gpicontroller::set_temperature_bar(QString data)
+{
+    qDebug() <<data;
+    ui->tempBar->setValue(data.toFloat());
+    if (ui->buttonTempOff->isEnabled())
+        ui->tempBar->setEnabled(true);
+    else
+        ui->tempBar->setEnabled(false);
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_temperature_bar(QString)));
+}
+void gpicontroller::on_buttonSetTemp_clicked()
+{
+    int number=ui->spinBoxTemperature->value();
+    send_message("@STT "+QString::number(number));
+}
+
+void gpicontroller::on_buttonTempOn_clicked()
+{
+    send_message("@TPCL ON");
+}
+
+void gpicontroller::on_buttonTempOff_clicked()
+{
+    send_message("@TPCL OFF");
+}
