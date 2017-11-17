@@ -87,6 +87,10 @@ class gpicontroller : public QMainWindow
 
         void on_buttonTempOff_clicked();
 
+        void on_buttonRinse_clicked();
+
+        void on_buttonStop_clicked();
+
 private:
         Ui::gpicontroller *ui;
         QString portname;

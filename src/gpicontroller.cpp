@@ -384,3 +384,14 @@ void gpicontroller::on_buttonTempOff_clicked()
 {
     send_message("@TPCL OFF");
 }
+
+void gpicontroller::on_buttonRinse_clicked()
+{
+    QString number=QString::number(ui->spinboxStrokes->value());
+    send_message("@IRNS 100,"+number);
+}
+
+void gpicontroller::on_buttonStop_clicked()
+{
+    send_message("@STOP");
+}

@@ -511,7 +511,11 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QSpinBox" name="spinboxStrokes"/>
+              <widget class="QSpinBox" name="spinboxStrokes">
+               <property name="value">
+                <number>5</number>
+               </property>
+              </widget>
              </item>
              <item row="1" column="1">
               <widget class="QPushButton" name="buttonRinse">
@@ -751,11 +755,25 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="buttonHomeNeedle">
-              <property name="text">
-               <string>Home Needle</string>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <property name="topMargin">
+               <number>4</number>
               </property>
-             </widget>
+              <item>
+               <widget class="QPushButton" name="buttonHomeNeedle">
+                <property name="text">
+                 <string>Home Needle</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="buttonStop">
+                <property name="text">
+                 <string>Stop PIC</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="layoutHome">
