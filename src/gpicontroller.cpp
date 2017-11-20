@@ -58,7 +58,6 @@ gpicontroller::gpicontroller(QWidget *parent) :
     port=new QSerialPort(this);
     open_port(get_port());
     qDebug()<< this->childrenRegion().boundingRect().size();
-    QTimer *timer = new QTimer(this);
 }
 
 void gpicontroller::open_port(QString portname)
@@ -81,26 +80,94 @@ void gpicontroller::open_port(QString portname)
     else
     {
         qDebug() << port->portName() << " port has been opened successfully ...";
-        ui->console->append(port->portName()+" port has been opened successfully ...");
+        ui->console->append("<div style='color:LimeGreen'>"+port->portName()+" port has been opened successfully ...</div>");
         port->setBaudRate(QSerialPort::Baud9600);
         port->setStopBits(QSerialPort::OneStop);
         port->setDataBits(QSerialPort::Data8);
         port->setParity(QSerialPort::NoParity);
         port->setFlowControl(QSerialPort::NoFlowControl);
         qDebug() << port->portName() << " port has been configured correctly ...";
-        ui->console->append(port->portName()+" port has been configured correctly ...");
+        ui->console->append("<div style='color:LimeGreen'>"+port->portName()+" port has been configured correctly ...</div>");
         QScrollBar *vsb = ui->console->verticalScrollBar();
         QScrollBar *hsb = ui->console->horizontalScrollBar();
         vsb->setValue(vsb->maximum());
         hsb->setValue(hsb->minimum());
-        ui->labelComstate->setText("Connected");
+        ui->labelComstate->setText("Valid Port");
+        connect(port, SIGNAL(readyRead()), this, SLOT(read_data()));
+        timer->setInterval(5000);
+        connect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+        timer->start();
+
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(initialize(QString)));
+        send_message("@");
     }
-//    connect(port, &QSerialPort::readyRead, this, &gpicontroller::read_data);
-    connect(port, SIGNAL(readyRead()), this, SLOT(read_data()));
-//    connect(this, SIGNAL(data_was_read(QString)), buffer, SLOT(data_recieved(QString)));
 }
+void gpicontroller::timed_out()
+{
+    qDebug()<<"timed out";
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(initialize(QString)));
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_serial(QString)));
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
+    ui->labelComstate->setText("Disconnected");
+    timer->stop();
+    ui->console->append("<div style='color:Red'>Connection timed out</div>");
+    QScrollBar *vsb = ui->console->verticalScrollBar();
+    QScrollBar *hsb = ui->console->horizontalScrollBar();
+    vsb->setValue(vsb->maximum());
+    hsb->setValue(hsb->minimum());
+    disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+}
+void gpicontroller::scrolldown()
+{
+    QScrollBar *vsb = ui->console->verticalScrollBar();
+    QScrollBar *hsb = ui->console->horizontalScrollBar();
+    vsb->setValue(vsb->maximum());
+    hsb->setValue(hsb->minimum());
+}
+void gpicontroller::initialize(QString data)
+{
+    QStringList datal;
+    if (data=="0")
+        send_message("@DDF");
+    else
+        datal=data.split(",");
+    if (datal.length()==5)
+    {
+            disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(initialize(QString)));
+            data=datal[0];
+            qDebug() << data.toFloat();
+            int val=int(data.toFloat()+.5);
+            ui->spinboxNeedle->setValue(val);
+            ui->console->append("<div style='color:LimeGreen'>Needle SetPoint is: "+data+"</div>");
 
-
+            send_message("@GSIP 1");
+            timer->start();
+            connect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_serial(QString)));
+    }
+}
+void gpicontroller::get_firmware(QString data){
+    if (data!='0')
+    {
+        disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
+        ui->labelFirmware->setText(data);
+        ui->labelFirmware->setEnabled(true);
+        ui->labelComstate->setText("Connected");
+        scrolldown();
+        timer->stop();
+        disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+    }
+}
+void gpicontroller::get_serial(QString data){
+    if (data!='0')
+    {
+        disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_serial(QString)));
+        ui->labelSerial->setText("Serial: "+data);
+        ui->labelSerial->setEnabled(true);
+        timer->start();
+        send_message("&");
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
+    }
+}
 void gpicontroller::select_vial()
 {
     QString message = "@GTV ";
@@ -175,21 +242,31 @@ void gpicontroller::on_buttonHome_clicked()
 
 void gpicontroller::send_message(QString message)
 {
-    qDebug() << message;
-    ui->console->append(message);
-    QScrollBar *vsb = ui->console->verticalScrollBar();
-    QScrollBar *hsb = ui->console->horizontalScrollBar();
-    vsb->setValue(vsb->maximum());
-    hsb->setValue(hsb->minimum());
-    if (message=="#"){
-            setting_serial=true;
+    if (message!="" && ui->labelComstate->text()!="Disconnected")
+    {
+        qDebug() << message;
+        ui->console->append(message);
+        QScrollBar *vsb = ui->console->verticalScrollBar();
+        QScrollBar *hsb = ui->console->horizontalScrollBar();
+        vsb->setValue(vsb->maximum());
+        hsb->setValue(hsb->minimum());
+        if (message=="#"){
+                setting_serial=true;
+        }
+        message+="\r";
+        port->write(message.toLatin1().data(),message.length());
+//        int *r=new int;
+//        buffer->append("test",r);
     }
-    message+="\r";
-    port->write(message.toLatin1().data(),message.length());
-    int *r=new int;
-    buffer->append("test",r);
-//    buffer->last->set_val("0");
-
+    else if (ui->labelComstate->text()!="Connected")
+    {
+        ui->console->append("<div style='color:red'>Error: Message \""+message+"\" not sent");
+        ui->console->append("<div style='color:red'>Not currently connected to valid machine");
+        QScrollBar *vsb = ui->console->verticalScrollBar();
+        QScrollBar *hsb = ui->console->horizontalScrollBar();
+        vsb->setValue(vsb->maximum());
+        hsb->setValue(hsb->minimum());
+    }
 }
 
 void gpicontroller::on_buttonPark_clicked()
@@ -395,3 +472,31 @@ void gpicontroller::on_buttonStop_clicked()
 {
     send_message("@STOP");
 }
+
+void gpicontroller::on_buttonGetNeedleDepthSetPoint_clicked()
+{
+    send_message("@");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_needle_depth(QString)));
+}
+void gpicontroller::get_needle_depth(QString data)
+{
+    QStringList datal;
+    if (data=="0")
+        send_message("@DDF");
+    else
+        datal=data.split(",");
+    if (datal.length()==5)
+    {
+            disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_needle_depth(QString)));
+            data=datal[0];
+            qDebug() << data.toFloat();
+            int val=int(data.toFloat()+.5);
+            ui->spinboxNeedle->setValue(val);
+            ui->console->append("<div style='color:LimeGreen'>Needle SetPoint is: "+data+"</div>");
+            QScrollBar *vsb = ui->console->verticalScrollBar();
+            QScrollBar *hsb = ui->console->horizontalScrollBar();
+            vsb->setValue(vsb->maximum());
+            hsb->setValue(hsb->minimum());
+    }
+}
+

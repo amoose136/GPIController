@@ -34,6 +34,7 @@ class gpicontroller : public QMainWindow
         void *timeout_sig;
         bool setting_serial=false;
         int serialNumber=11111;
+        QTimer *timer=new QTimer(this);
 
         void open_port(QString portname);
         QString get_port();
@@ -44,6 +45,8 @@ class gpicontroller : public QMainWindow
 
     signals:
         void data_was_read(QString);
+    public slots:
+        void timed_out();
 
     private slots:
         void update_temp_buttons(QString);
@@ -51,6 +54,10 @@ class gpicontroller : public QMainWindow
         void set_needle_depth(QString);
         void needle_timeout();
         void set_temperature_bar(QString);
+        void get_needle_depth(QString);
+        void initialize(QString);
+        void get_firmware(QString);
+        void get_serial(QString);
 
         void on_buttonHome_clicked();
 
@@ -91,9 +98,12 @@ class gpicontroller : public QMainWindow
 
         void on_buttonStop_clicked();
 
+        void on_buttonGetNeedleDepthSetPoint_clicked();
+
 private:
         Ui::gpicontroller *ui;
         QString portname;
+        void scrolldown();
 
 
 };

@@ -451,13 +451,6 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0" colspan="2">
-            <widget class="QPushButton" name="buttonGoToDepthSetpoint">
-             <property name="text">
-              <string>Go To Depth Setpoint</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="1">
             <widget class="QSpinBox" name="spinboxNeedle">
              <property name="sizePolicy">
@@ -477,6 +470,20 @@
                <width>65</width>
                <height>16777215</height>
               </size>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QPushButton" name="buttonGoToDepthSetpoint">
+             <property name="text">
+              <string>Go To Depth Setpoint</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QPushButton" name="buttonGetNeedleDepthSetPoint">
+             <property name="text">
+              <string>Get Setpoint</string>
              </property>
             </widget>
            </item>
@@ -901,6 +908,26 @@
               </property>
               <property name="text">
                <string>Disconnected</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelSerial">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Serial:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelFirmware">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Build:</string>
               </property>
              </widget>
             </item>
