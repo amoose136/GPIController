@@ -606,20 +606,6 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="buttonRefreshTempState">
-               <property name="text">
-                <string>Refresh</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="buttonSetTemp">
-               <property name="text">
-                <string>Set Temp</string>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="1">
               <widget class="QProgressBar" name="tempBar">
                <property name="enabled">
@@ -658,15 +644,59 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
-              <widget class="QSpinBox" name="spinBoxTemperature">
-               <property name="minimum">
-                <number>4</number>
-               </property>
-               <property name="maximum">
-                <number>40</number>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="buttonRefreshTempState">
+               <property name="text">
+                <string>Refresh</string>
                </property>
               </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="buttonCRefresh">
+               <property name="text">
+                <string>Lock Refresh</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="buttonGetTemp">
+                 <property name="text">
+                  <string>Get Setpoint</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonSetTemp">
+                 <property name="text">
+                  <string>Set To</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="spinBoxTemperature">
+                 <property name="suffix">
+                  <string>°C</string>
+                 </property>
+                 <property name="minimum">
+                  <number>4</number>
+                 </property>
+                 <property name="maximum">
+                  <number>40</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>

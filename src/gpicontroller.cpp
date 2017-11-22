@@ -172,14 +172,7 @@ void gpicontroller::select_vial()
 {
     QString message = "@GTV ";
     message+=ui->spinboxSelectVial->cleanText();
-    qDebug() << message;
-    ui->console->append(message);
-    QScrollBar *vsb = ui->console->verticalScrollBar();
-    QScrollBar *hsb = ui->console->horizontalScrollBar();
-    vsb->setValue(vsb->maximum());
-    hsb->setValue(hsb->minimum());
-    message+="\r";
-    port->write(message.toLatin1().data(),message.length());
+    send_message(message);
 }
 
 gpicontroller::~gpicontroller()
@@ -500,3 +493,76 @@ void gpicontroller::get_needle_depth(QString data)
     }
 }
 
+
+void gpicontroller::on_buttonCRefresh_clicked()
+{
+    if (ui->buttonCRefresh->text()=="Lock Refresh")
+    {
+        ui->buttonCRefresh->setText("Unlock Refresh");
+        const bool val=false;
+        ui->buttonHome->setEnabled(val);
+        ui->buttonPark->setEnabled(val);
+        ui->buttonHomeNeedle->setEnabled(val);
+        ui->buttonMove->setEnabled(val);
+        ui->buttonSetDepth->setEnabled(val);
+        ui->buttonGoToDepthSetpoint->setEnabled(val);
+        ui->buttonGetNeedleDepthSetPoint->setEnabled(val);
+        ui->buttonSendArbitrary->setEnabled(val);
+        ui->buttonConnect->setEnabled(val);
+        ui->buttonTempOff->setEnabled(val);
+        ui->buttonTempOn->setEnabled(val);
+        ui->buttonSelectVial->setEnabled(val);
+        ui->buttonRinse->setEnabled(val);
+        ui->buttonSetTemp->setEnabled(val);
+        ui->buttonSetSerialNumber->setEnabled(val);
+        ui->buttonStop->setEnabled(val);
+        ui->buttonRefreshTempState->setEnabled(val);
+        ui->buttonGetTemp->setEnabled(val);
+        timer->setInterval(1100);
+        connect(timer,SIGNAL(timeout()),this,SLOT(on_buttonRefreshTempState_clicked()));
+        timer->start();
+    }
+    else
+    {
+        ui->buttonCRefresh->setText("Lock Refresh");
+        const bool val=true;
+        ui->buttonHome->setEnabled(val);
+        ui->buttonPark->setEnabled(val);
+        ui->buttonHomeNeedle->setEnabled(val);
+        ui->buttonMove->setEnabled(val);
+        ui->buttonSetDepth->setEnabled(val);
+        ui->buttonGoToDepthSetpoint->setEnabled(val);
+        ui->buttonGetNeedleDepthSetPoint->setEnabled(val);
+        ui->buttonSendArbitrary->setEnabled(val);
+        ui->buttonConnect->setEnabled(val);
+        ui->buttonSelectVial->setEnabled(val);
+        ui->buttonRinse->setEnabled(val);
+        ui->buttonSetTemp->setEnabled(val);
+        ui->buttonSetSerialNumber->setEnabled(val);
+        ui->buttonStop->setEnabled(val);
+        ui->buttonRefreshTempState->setEnabled(val);
+        ui->buttonGetTemp->setEnabled(val);
+        timer->stop();
+        disconnect(timer,SIGNAL(timeout()),this,SLOT(on_buttonRefreshTempState_clicked()));
+        QTimer::singleShot(800,this,SLOT(on_buttonRefreshTempState_clicked()));//provide one final update to the temp state
+    }
+}
+
+void gpicontroller::on_buttonGetTemp_clicked()
+{
+   send_message("@DDF");
+   connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_temp_setpoint(QString)));
+}
+void gpicontroller::update_temp_setpoint(QString data)
+{
+    QStringList datal;
+    datal=data.split(",");
+    if (datal.length()==5)
+    {
+        disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_temp_setpoint(QString)));
+        data=datal[3];
+        qDebug() << data.toFloat();
+        int val=int(data.toFloat()*.25-4);
+        ui->spinBoxTemperature->setValue(val);
+    }
+}

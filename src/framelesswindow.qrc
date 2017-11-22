@@ -4,5 +4,8 @@
         <file>images/icon_window_restore.png</file>
         <file>images/icon_window_maximize.png</file>
         <file>images/icon_window_close.png</file>
+        <file>images/autosampler48.ico</file>
+        <file>images/autosampler128.ico</file>
+        <file>images/autosampler32.ico</file>
     </qresource>
 </RCC>

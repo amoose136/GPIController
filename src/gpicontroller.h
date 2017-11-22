@@ -58,6 +58,7 @@ class gpicontroller : public QMainWindow
         void initialize(QString);
         void get_firmware(QString);
         void get_serial(QString);
+        void update_temp_setpoint(QString);
 
         void on_buttonHome_clicked();
 
@@ -99,6 +100,10 @@ class gpicontroller : public QMainWindow
         void on_buttonStop_clicked();
 
         void on_buttonGetNeedleDepthSetPoint_clicked();
+
+        void on_buttonCRefresh_clicked();
+
+        void on_buttonGetTemp_clicked();
 
 private:
         Ui::gpicontroller *ui;

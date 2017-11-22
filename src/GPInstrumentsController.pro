@@ -8,10 +8,11 @@ QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = GPInstrumentsController
+TARGET = GPIController
 TEMPLATE = app
-
+CONFIG += static
 INCLUDEPATH +="framelesswindow"
+win32:RC_ICONS += images/autosampler256.ico
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
