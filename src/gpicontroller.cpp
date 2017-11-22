@@ -367,11 +367,12 @@ void gpicontroller::on_buttonSendArbitrary_clicked()
 }
 void gpicontroller::set_needle_depth(QString data)
 {
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
     qDebug()<<"@SND "<<data;
+    data=data.split(" ")[0];//discard second zero if it comes
     float data_s=data.toFloat()*.05;
     qDebug()<<"@SND "+QString::number(data_s);
     send_message("@SND "+QString::number(data_s));
-    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
 }
 void gpicontroller::needle_timeout()
 {

@@ -157,7 +157,7 @@
            </font>
           </property>
           <property name="title">
-           <string>Move (steps if blank)</string>
+           <string>Move (relative steps if blank)</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -207,6 +207,9 @@
                <width>65</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string/>
              </property>
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
@@ -269,7 +272,7 @@
               </font>
              </property>
              <property name="text">
-              <string>z</string>
+              <string>Z  (1 step = .05 mm)</string>
              </property>
             </widget>
            </item>
@@ -292,6 +295,9 @@
                <width>65</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>1 step = .05 mm</string>
              </property>
              <property name="minimum">
               <number>-3500</number>
@@ -325,7 +331,7 @@
               <number>1</number>
              </property>
              <property name="text">
-              <string>needle (mm)</string>
+              <string>needle (mm; absolute)</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
