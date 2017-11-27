@@ -276,6 +276,9 @@ void gpicontroller::spinboxX_valueChanged()
     ui->spinboxY->setValue(0);
     ui->spinboxZ->setValue(0);
     ui->spinboxSyringe->setValue(0);
+    ui->spinboxXin->blockSignals(true);
+    ui->spinboxXin->setValue(ui->spinboxX->value()*.00719);
+    ui->spinboxXin->blockSignals(false);
 }
 void gpicontroller::spinboxY_valueChanged()
 {
@@ -286,6 +289,9 @@ void gpicontroller::spinboxY_valueChanged()
     ui->spinboxX->setValue(0);
     ui->spinboxZ->setValue(0);
     ui->spinboxSyringe->setValue(0);
+    ui->spinboxYin->blockSignals(true);
+    ui->spinboxYin->setValue(ui->spinboxY->value()*.00719);
+    ui->spinboxYin->blockSignals(false);
 }
 void gpicontroller::spinboxZ_valueChanged()
 {
@@ -296,6 +302,9 @@ void gpicontroller::spinboxZ_valueChanged()
     ui->spinboxY->setValue(0);
     ui->spinboxX->setValue(0);
     ui->spinboxSyringe->setValue(0);
+    ui->spinboxZmm->blockSignals(true);
+    ui->spinboxZmm->setValue(ui->spinboxZ->value()*.05);
+    ui->spinboxZmm->blockSignals(false);
 }
 void gpicontroller::spinboxNeedle_valueChanged()
 {
@@ -373,12 +382,13 @@ void gpicontroller::set_needle_depth(QString data)
     float data_s=data.toFloat()*.05;
     qDebug()<<"@SND "+QString::number(data_s);
     send_message("@SND "+QString::number(data_s));
+    send_message("@SDF");//Saves the present values for inj needle depth, syringe speed, rinse strokes, temp set, and temp controller condition to the CF
 }
 void gpicontroller::needle_timeout()
 {
-//    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
 //
-//    timer->stop();
+    timer->stop();
     qDebug()<<"timed out!";
     ui->console->append("<div style='color:red'>timed out!</div>");
 }
@@ -462,11 +472,6 @@ void gpicontroller::on_buttonRinse_clicked()
     send_message("@IRNS 100,"+number);
 }
 
-void gpicontroller::on_buttonStop_clicked()
-{
-    send_message("@STOP");
-}
-
 void gpicontroller::on_buttonGetNeedleDepthSetPoint_clicked()
 {
     send_message("@");
@@ -516,7 +521,6 @@ void gpicontroller::on_buttonCRefresh_clicked()
         ui->buttonRinse->setEnabled(val);
         ui->buttonSetTemp->setEnabled(val);
         ui->buttonSetSerialNumber->setEnabled(val);
-        ui->buttonStop->setEnabled(val);
         ui->buttonRefreshTempState->setEnabled(val);
         ui->buttonGetTemp->setEnabled(val);
         timer->setInterval(1100);
@@ -540,7 +544,6 @@ void gpicontroller::on_buttonCRefresh_clicked()
         ui->buttonRinse->setEnabled(val);
         ui->buttonSetTemp->setEnabled(val);
         ui->buttonSetSerialNumber->setEnabled(val);
-        ui->buttonStop->setEnabled(val);
         ui->buttonRefreshTempState->setEnabled(val);
         ui->buttonGetTemp->setEnabled(val);
         timer->stop();
@@ -567,3 +570,55 @@ void gpicontroller::update_temp_setpoint(QString data)
         ui->spinBoxTemperature->setValue(val);
     }
 }
+
+void gpicontroller::on_spinboxXin_valueChanged(double val)
+{
+    ui->spinboxX->blockSignals(true);
+    val/=.00719;
+    qDebug()<<"double: "<<val;//needed for some reason
+    const int ival=int(val);
+    ui->spinboxX->setValue(ival);
+    make_labels_normal_weight(ui->labelX);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxY->setValue(0);
+    ui->spinboxZ->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+    ui->spinboxX->blockSignals(false);
+}
+
+void gpicontroller::on_spinboxYin_valueChanged(double val)
+{
+    ui->spinboxY->blockSignals(true);
+    val/=.00719;
+    qDebug()<<"double: "<<val;//needed for some reason
+    const int ival=int(val);
+    ui->spinboxY->setValue(ival);
+    make_labels_normal_weight(ui->labelY);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxZ->setValue(0);
+    ui->spinboxX->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+    ui->spinboxY->blockSignals(false);
+}
+
+void gpicontroller::on_spinboxZmm_valueChanged(double val)
+{
+    ui->spinboxZ->blockSignals(true);
+    val/=.05;
+    qDebug()<<"double: "<<val;//needed for some reason
+    const int ival=int(val);
+    ui->spinboxZ->setValue(ival);
+    make_labels_normal_weight(ui->labelZ);
+    ui->spinboxNeedle->blockSignals(true);
+    ui->spinboxNeedle->setValue(0);
+    ui->spinboxNeedle->blockSignals(false);
+    ui->spinboxY->setValue(0);
+    ui->spinboxX->setValue(0);
+    ui->spinboxSyringe->setValue(0);
+    ui->spinboxZ->blockSignals(false);
+}
+

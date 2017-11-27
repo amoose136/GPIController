@@ -95,6 +95,9 @@
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Select the vial to go to</string>
+            </property>
             <property name="text">
              <string>Select Vial</string>
             </property>
@@ -108,6 +111,9 @@
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Scroll to change or type to enter a precise value</string>
+            </property>
             <property name="maximum">
              <number>52</number>
             </property>
@@ -119,9 +125,12 @@
              <font>
               <family>Arial</family>
               <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Goes to the selected vial above</string>
             </property>
             <property name="text">
              <string>Go To</string>
@@ -157,7 +166,7 @@
            </font>
           </property>
           <property name="title">
-           <string>Move (relative steps if blank)</string>
+           <string>Move</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -183,42 +192,11 @@
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;1 step = .00719 mm. &lt;/p&gt;&lt;p&gt;Command sent with steps and is relative to current position&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>x</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="spinboxX">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>65</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>65</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string/>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="minimum">
-              <number>-1480</number>
-             </property>
-             <property name="maximum">
-              <number>1480</number>
              </property>
             </widget>
            </item>
@@ -230,36 +208,11 @@
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;1 step = .00719 mm. &lt;/p&gt;&lt;p&gt;Command sent with steps and is relative to current position&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>y</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="spinboxY">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>65</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>65</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="minimum">
-              <number>-1950</number>
-             </property>
-             <property name="maximum">
-              <number>1950</number>
              </property>
             </widget>
            </item>
@@ -271,39 +224,11 @@
                <pointsize>12</pointsize>
               </font>
              </property>
-             <property name="text">
-              <string>Z  (1 step = .05 mm)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="spinboxZ">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>65</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>65</width>
-               <height>16777215</height>
-              </size>
-             </property>
              <property name="toolTip">
-              <string>1 step = .05 mm</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;1 step = .05 mm. &lt;/p&gt;&lt;p&gt;Command sent with steps and is relative to current position&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
-             <property name="minimum">
-              <number>-3500</number>
-             </property>
-             <property name="maximum">
-              <number>3500</number>
+             <property name="text">
+              <string>z</string>
              </property>
             </widget>
            </item>
@@ -327,11 +252,14 @@
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Command is sent in mm units and is an absolute position</string>
+             </property>
              <property name="lineWidth">
               <number>1</number>
              </property>
              <property name="text">
-              <string>needle (mm; absolute)</string>
+              <string>needle</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -353,7 +281,7 @@
               </font>
              </property>
              <property name="text">
-              <string>syringe (μL)</string>
+              <string>syringe</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -389,6 +317,12 @@
                <height>6</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Scroll to change or type to enter a precise value</string>
+             </property>
+             <property name="suffix">
+              <string> μL</string>
+             </property>
             </widget>
            </item>
            <item row="5" column="0">
@@ -403,9 +337,12 @@
               <font>
                <family>Arial</family>
                <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Set the needle depth to the current needle position</string>
              </property>
              <property name="text">
               <string>Set Needle Depth</string>
@@ -436,9 +373,12 @@
               <font>
                <family>Arial</family>
                <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Send the command to move the active element of the form above by the indicated amount</string>
              </property>
              <property name="text">
               <string>Move</string>
@@ -477,10 +417,21 @@
                <height>16777215</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Scroll to change or type to enter a precise value</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
             </widget>
            </item>
            <item row="6" column="0">
             <widget class="QPushButton" name="buttonGoToDepthSetpoint">
+             <property name="font">
+              <font>
+               <pointsize>11</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>Go To Depth Setpoint</string>
              </property>
@@ -488,10 +439,250 @@
            </item>
            <item row="6" column="1">
             <widget class="QPushButton" name="buttonGetNeedleDepthSetPoint">
+             <property name="toolTip">
+              <string>Gets the current needle depth setpoint</string>
+             </property>
              <property name="text">
               <string>Get Setpoint</string>
              </property>
             </widget>
+           </item>
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_Z">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QDoubleSpinBox" name="spinboxZmm">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="prefix">
+                <string/>
+               </property>
+               <property name="suffix">
+                <string> mm</string>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="minimum">
+                <double>-175.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>175.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.050000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinboxZ">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>65</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::UpDownArrows</enum>
+               </property>
+               <property name="suffix">
+                <string> step</string>
+               </property>
+               <property name="minimum">
+                <number>-3500</number>
+               </property>
+               <property name="maximum">
+                <number>3500</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_Y">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QDoubleSpinBox" name="spinboxYin">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="statusTip">
+                <string/>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="suffix">
+                <string> in</string>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="minimum">
+                <double>-14.020000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>14.020000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.007190000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinboxY">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>65</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::UpDownArrows</enum>
+               </property>
+               <property name="suffix">
+                <string> step</string>
+               </property>
+               <property name="minimum">
+                <number>-1950</number>
+               </property>
+               <property name="maximum">
+                <number>1950</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QDoubleSpinBox" name="spinboxXin">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="suffix">
+                <string> in</string>
+               </property>
+               <property name="minimum">
+                <double>-10.640000000000001</double>
+               </property>
+               <property name="maximum">
+                <double>10.640000000000001</double>
+               </property>
+               <property name="singleStep">
+                <double>0.007190000000000</double>
+               </property>
+               <property name="value">
+                <double>0.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinboxX">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>65</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::UpDownArrows</enum>
+               </property>
+               <property name="suffix">
+                <string> step</string>
+               </property>
+               <property name="minimum">
+                <number>-1480</number>
+               </property>
+               <property name="maximum">
+                <number>1480</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -525,6 +716,9 @@
              </item>
              <item row="0" column="1">
               <widget class="QSpinBox" name="spinboxStrokes">
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
                <property name="value">
                 <number>5</number>
                </property>
@@ -536,9 +730,12 @@
                 <font>
                  <family>Arial</family>
                  <pointsize>12</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
+               </property>
+               <property name="toolTip">
+                <string>Rinse the syringe the indicated number of times</string>
                </property>
                <property name="text">
                 <string>Rinse</string>
@@ -577,7 +774,7 @@
            </size>
           </property>
           <property name="title">
-           <string>Temperature (no autorefresh)</string>
+           <string>Temperature</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
@@ -587,6 +784,9 @@
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="toolTip">
+                <string>Activate heating and cooling</string>
+               </property>
                <property name="text">
                 <string>On</string>
                </property>
@@ -594,6 +794,9 @@
              </item>
              <item row="0" column="1">
               <widget class="QPushButton" name="buttonTempOff">
+               <property name="toolTip">
+                <string>Deactivate heating and cooling</string>
+               </property>
                <property name="text">
                 <string>Off</string>
                </property>
@@ -624,6 +827,9 @@
                  <bold>false</bold>
                 </font>
                </property>
+               <property name="toolTip">
+                <string>The temperature as of the last refresh. Does not auto-update unless &quot;Lock Refresh&quot; is active</string>
+               </property>
                <property name="minimum">
                 <number>0</number>
                </property>
@@ -631,7 +837,7 @@
                 <number>50</number>
                </property>
                <property name="value">
-                <number>27</number>
+                <number>0</number>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -652,6 +858,9 @@
              </item>
              <item row="2" column="0">
               <widget class="QPushButton" name="buttonRefreshTempState">
+               <property name="toolTip">
+                <string>Gets the current status of the temperature board</string>
+               </property>
                <property name="text">
                 <string>Refresh</string>
                </property>
@@ -659,6 +868,9 @@
              </item>
              <item row="2" column="1">
               <widget class="QPushButton" name="buttonCRefresh">
+               <property name="toolTip">
+                <string>Locks down the interface and continually updates the temperature indicator</string>
+               </property>
                <property name="text">
                 <string>Lock Refresh</string>
                </property>
@@ -677,6 +889,9 @@
                </property>
                <item>
                 <widget class="QPushButton" name="buttonGetTemp">
+                 <property name="toolTip">
+                  <string>Grabs the current setpoint</string>
+                 </property>
                  <property name="text">
                   <string>Get Setpoint</string>
                  </property>
@@ -684,13 +899,19 @@
                </item>
                <item>
                 <widget class="QPushButton" name="buttonSetTemp">
+                 <property name="toolTip">
+                  <string>Changes the temperature setpoint to the amount indicated on ther right</string>
+                 </property>
                  <property name="text">
-                  <string>Set To</string>
+                  <string>Set</string>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="QSpinBox" name="spinBoxTemperature">
+                 <property name="toolTip">
+                  <string>Scroll to change or type to enter a precise value</string>
+                 </property>
                  <property name="suffix">
                   <string>°C</string>
                  </property>
@@ -755,6 +976,9 @@
                 <pointsize>12</pointsize>
                </font>
               </property>
+              <property name="toolTip">
+               <string>Moves needle carriage to end stops</string>
+              </property>
               <property name="autoFillBackground">
                <bool>false</bool>
               </property>
@@ -780,6 +1004,9 @@
                 <pointsize>12</pointsize>
                </font>
               </property>
+              <property name="toolTip">
+               <string>Move to park position</string>
+              </property>
               <property name="autoFillBackground">
                <bool>false</bool>
               </property>
@@ -804,15 +1031,11 @@
               </property>
               <item>
                <widget class="QPushButton" name="buttonHomeNeedle">
+                <property name="toolTip">
+                 <string>Send needle to 0 mm</string>
+                </property>
                 <property name="text">
                  <string>Home Needle</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="buttonStop">
-                <property name="text">
-                 <string>Stop PIC</string>
                 </property>
                </widget>
               </item>
@@ -833,6 +1056,9 @@
                   <family>Arial</family>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="toolTip">
+                 <string>Home the x axis (unimplemented)</string>
                 </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
@@ -862,6 +1088,9 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="toolTip">
+                 <string>Home the y axis (unimplemented)</string>
+                </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
                 </property>
@@ -889,6 +1118,9 @@
                   <family>Arial</family>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="toolTip">
+                 <string>Home the z axis (unimplemented)</string>
                 </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
@@ -975,7 +1207,12 @@
                  <font>
                   <family>Arial</family>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
+                </property>
+                <property name="toolTip">
+                 <string>Connect to the selected communications port</string>
                 </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
@@ -1001,6 +1238,9 @@
                   <family>Arial</family>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="toolTip">
+                 <string>Refresh list of available ports</string>
                 </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
@@ -1035,6 +1275,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QSpinBox" name="spinBoxSerialNumber">
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="statusTip">
+                <string/>
+               </property>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::UpDownArrows</enum>
                </property>
@@ -1091,10 +1337,17 @@ p, li { white-space: pre-wrap; }
           <item>
            <layout class="QHBoxLayout" name="layoutConsoleSendBar">
             <item>
-             <widget class="QLineEdit" name="arbitrarySerialLine"/>
+             <widget class="QLineEdit" name="arbitrarySerialLine">
+              <property name="toolTip">
+               <string>Input commands to send over serial here</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="buttonSendArbitrary">
+              <property name="toolTip">
+               <string>Sends the contents of the box on the left</string>
+              </property>
               <property name="text">
                <string>Send</string>
               </property>
@@ -1114,9 +1367,6 @@ p, li { white-space: pre-wrap; }
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>spinboxSelectVial</tabstop>
-  <tabstop>spinboxX</tabstop>
-  <tabstop>spinboxY</tabstop>
-  <tabstop>spinboxZ</tabstop>
   <tabstop>spinboxNeedle</tabstop>
   <tabstop>spinboxSyringe</tabstop>
   <tabstop>buttonMove</tabstop>

@@ -97,13 +97,17 @@ class gpicontroller : public QMainWindow
 
         void on_buttonRinse_clicked();
 
-        void on_buttonStop_clicked();
-
         void on_buttonGetNeedleDepthSetPoint_clicked();
 
         void on_buttonCRefresh_clicked();
 
         void on_buttonGetTemp_clicked();
+
+        void on_spinboxXin_valueChanged(double);
+
+        void on_spinboxYin_valueChanged(double);
+
+        void on_spinboxZmm_valueChanged(double);
 
 private:
         Ui::gpicontroller *ui;
