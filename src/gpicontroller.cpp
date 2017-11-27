@@ -310,6 +310,7 @@ void gpicontroller::spinboxNeedle_valueChanged()
 {
     ui->spinboxNeedle->blockSignals(true); // to stop from trigging self on the line below the next with "setValue()"
     make_labels_normal_weight(ui->labelNeedle);
+    ui->spinboxX->setValue(0);
     ui->spinboxY->setValue(0);
     ui->spinboxZ->setValue(0);
     ui->spinboxSyringe->setValue(0);
