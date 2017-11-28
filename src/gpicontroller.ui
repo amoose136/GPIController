@@ -423,6 +423,9 @@
              <property name="suffix">
               <string> mm</string>
              </property>
+             <property name="maximum">
+              <number>55</number>
+             </property>
             </widget>
            </item>
            <item row="6" column="0">
