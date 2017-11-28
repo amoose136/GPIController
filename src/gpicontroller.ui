@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
+    <width>807</width>
     <height>671</height>
    </rect>
   </property>
@@ -225,10 +225,10 @@
               </font>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;1 step = .05 mm. &lt;/p&gt;&lt;p&gt;Command sent with steps and is relative to current position&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>1 step = .05 mm.&lt;br/&gt; Command sent with steps and is relative to current position&lt;br/&gt;Positive values move the needle down</string>
              </property>
              <property name="text">
-              <string>z</string>
+              <string>z-needle (relative)</string>
              </property>
             </widget>
            </item>
@@ -259,7 +259,7 @@
               <number>1</number>
              </property>
              <property name="text">
-              <string>needle</string>
+              <string>z-needle (absolute)</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

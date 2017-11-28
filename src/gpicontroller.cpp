@@ -134,15 +134,24 @@ void gpicontroller::initialize(QString data)
     if (datal.length()==5)
     {
             disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(initialize(QString)));
+            //grrab and display the needle setpoint
             data=datal[0];
             qDebug() << data.toFloat();
             int val=int(data.toFloat()+.5);
             ui->spinboxNeedle->setValue(val);
             ui->console->append("<div style='color:LimeGreen'>Needle SetPoint is: "+data+"</div>");
 
+            //grab and display temperature setpoint
+            data=datal[3];
+            qDebug() << data.toFloat();
+            val=int(data.toFloat()*.25-4);
+            ui->spinBoxTemperature->setValue(val);
+
             send_message("@GSIP 1");
             timer->start();
             connect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_serial(QString)));
+
+
     }
 }
 void gpicontroller::get_firmware(QString data){
@@ -155,6 +164,7 @@ void gpicontroller::get_firmware(QString data){
         scrolldown();
         timer->stop();
         disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+        on_buttonRefreshTempState_clicked();
     }
 }
 void gpicontroller::get_serial(QString data){
@@ -423,6 +433,7 @@ void gpicontroller::on_buttonHomeNeedle_clicked()
 
 void gpicontroller::on_buttonRefreshTempState_clicked()
 {
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonRefreshTempState_clicked()));
     send_message("@GSIP 12");
     connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_temp_buttons(QString)));
 }
@@ -460,11 +471,13 @@ void gpicontroller::on_buttonSetTemp_clicked()
 void gpicontroller::on_buttonTempOn_clicked()
 {
     send_message("@TPCL ON");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonRefreshTempState_clicked()));
 }
 
 void gpicontroller::on_buttonTempOff_clicked()
 {
     send_message("@TPCL OFF");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonRefreshTempState_clicked()));
 }
 
 void gpicontroller::on_buttonRinse_clicked()
