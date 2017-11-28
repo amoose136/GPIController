@@ -117,7 +117,7 @@
   color:rgb(153,153,153);</string>
            </property>
            <property name="text">
-            <string>GPI AutoSampler 720NV Debug Controller v1.21</string>
+            <string>GPI AutoSampler 720NV Debug Controller v1.22</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
