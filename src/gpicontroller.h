@@ -13,6 +13,7 @@
 #include <QVector>
 #include "serialBuffer.h"
 #include <QTimer>
+#include "qtcspinbox.h"
 
 namespace Ui {
     class gpicontroller;

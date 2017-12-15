@@ -48,7 +48,7 @@ gpicontroller::gpicontroller(QWidget *parent) :
     connect(ui->spinboxX,SIGNAL(valueChanged(int)),this,SLOT(spinboxX_valueChanged()));
     connect(ui->spinboxY,SIGNAL(valueChanged(int)),this,SLOT(spinboxY_valueChanged()));
     connect(ui->spinboxZ,SIGNAL(valueChanged(int)),this,SLOT(spinboxZ_valueChanged()));
-    connect(ui->spinboxNeedle,SIGNAL(valueChanged(int)),this,SLOT(spinboxNeedle_valueChanged()));
+    connect(ui->spinboxNeedle,SIGNAL(valueChanged(double)),this,SLOT(spinboxNeedle_valueChanged()));
     connect(ui->spinboxSyringe,SIGNAL(valueChanged(int)),this,SLOT(spinboxSyringe_valueChanged()));
     refresh_comBox();
     if (QSysInfo::productType()=="osx" && ui->comBox->findText("/dev/cu.usbserial")+1)

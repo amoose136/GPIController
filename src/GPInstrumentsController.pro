@@ -21,14 +21,16 @@ SOURCES     += \
                 gpicontroller.cpp \
                 framelesswindow/framelesswindow.cpp \
                 framelesswindow/windowdragger.cpp \
-                serialbuffer.cpp
+                serialbuffer.cpp \
+                qtcspinbox.cpp
 
 HEADERS     += \
                 gpicontroller.h \
                 DarkStyle.h \
                 framelesswindow/windowdragger.h \
                 framelesswindow/framelesswindow.h \
-                serialBuffer.h
+                serialBuffer.h \
+                qtcspinbox.h
 
 
 FORMS       += \

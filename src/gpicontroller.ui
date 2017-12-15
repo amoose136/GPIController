@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>807</width>
-    <height>671</height>
+    <width>873</width>
+    <height>693</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -345,7 +345,7 @@
               <string>Set the needle depth to the current needle position</string>
              </property>
              <property name="text">
-              <string>Set Needle Depth</string>
+              <string>Set Injection Port Depth</string>
              </property>
              <property name="checkable">
               <bool>false</bool>
@@ -368,6 +368,12 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>166</width>
+               <height>0</height>
+              </size>
              </property>
              <property name="font">
               <font>
@@ -397,37 +403,6 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="spinboxNeedle">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>65</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>65</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Scroll to change or type to enter a precise value</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="maximum">
-              <number>55</number>
-             </property>
-            </widget>
-           </item>
            <item row="6" column="0">
             <widget class="QPushButton" name="buttonGoToDepthSetpoint">
              <property name="font">
@@ -446,7 +421,7 @@
               <string>Gets the current needle depth setpoint</string>
              </property>
              <property name="text">
-              <string>Get Setpoint</string>
+              <string>Get Depth Setpoint</string>
              </property>
             </widget>
            </item>
@@ -687,6 +662,45 @@
              </item>
             </layout>
            </item>
+           <item row="3" column="1">
+            <layout class="QHBoxLayout" name="layout_z_absolute">
+             <item>
+              <widget class="QtcSpinBox" name="spinboxNeedle">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>89</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>65</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Scroll to change or type to enter a precise value</string>
+               </property>
+               <property name="suffix">
+                <string> mm</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonSetDepthDirect">
+               <property name="text">
+                <string>Set depth</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
          </widget>
         </item>
@@ -706,6 +720,12 @@
             <layout class="QFormLayout" name="layoutRinse">
              <item row="0" column="0">
               <widget class="QLabel" name="labelStrokes">
+               <property name="minimumSize">
+                <size>
+                 <width>188</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Arial</family>
@@ -781,11 +801,20 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <layout class="QFormLayout" name="formLayout_2">
+            <layout class="QFormLayout" name="layoutTemp">
+             <property name="horizontalSpacing">
+              <number>2</number>
+             </property>
              <item row="0" column="0">
               <widget class="QPushButton" name="buttonTempOn">
                <property name="enabled">
                 <bool>false</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>93</width>
+                 <height>0</height>
+                </size>
                </property>
                <property name="toolTip">
                 <string>Activate heating and cooling</string>
@@ -1368,9 +1397,15 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QtcSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>qtcspinbox.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>spinboxSelectVial</tabstop>
-  <tabstop>spinboxNeedle</tabstop>
   <tabstop>spinboxSyringe</tabstop>
   <tabstop>buttonMove</tabstop>
   <tabstop>spinboxStrokes</tabstop>
