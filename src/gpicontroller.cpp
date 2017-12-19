@@ -13,6 +13,7 @@
 #include <QDesktopWidget>
 #include "serialbuffer.h"
 #include <QTimer>
+#include <QFloat16>
 
 QString gpicontroller::get_port()
 {
@@ -45,11 +46,17 @@ gpicontroller::gpicontroller(QWidget *parent) :
     ui(new Ui::gpicontroller)
 {
     ui->setupUi(this);
+    //connect up the move buttons so they do stuff
     connect(ui->spinboxX,SIGNAL(valueChanged(int)),this,SLOT(spinboxX_valueChanged()));
     connect(ui->spinboxY,SIGNAL(valueChanged(int)),this,SLOT(spinboxY_valueChanged()));
     connect(ui->spinboxZ,SIGNAL(valueChanged(int)),this,SLOT(spinboxZ_valueChanged()));
     connect(ui->spinboxNeedle,SIGNAL(valueChanged(double)),this,SLOT(spinboxNeedle_valueChanged()));
     connect(ui->spinboxSyringe,SIGNAL(valueChanged(int)),this,SLOT(spinboxSyringe_valueChanged()));
+
+    //connect up the arbitrary serial line up and down arrows so command history works
+    connect(ui->arbitrarySerialLine,SIGNAL(downPressed()),this,SLOT(on_arbitrarySerialLine_downPressed()));
+    connect(ui->arbitrarySerialLine,SIGNAL(upPressed()),this,SLOT(on_arbitrarySerialLine_upPressed()));
+
     refresh_comBox();
     if (QSysInfo::productType()=="osx" && ui->comBox->findText("/dev/cu.usbserial")+1)
         ui->comBox->setCurrentIndex(ui->comBox->findText("/dev/cu.usbserial"));
@@ -108,6 +115,8 @@ void gpicontroller::timed_out()
     disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(initialize(QString)));
     disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_serial(QString)));
     disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position_reciever(QString)));
+
     ui->labelComstate->setText("Disconnected");
     timer->stop();
     ui->console->append("<div style='color:Red'>Connection timed out</div>");
@@ -154,19 +163,6 @@ void gpicontroller::initialize(QString data)
 
     }
 }
-void gpicontroller::get_firmware(QString data){
-    if (data!='0')
-    {
-        disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
-        ui->labelFirmware->setText(data);
-        ui->labelFirmware->setEnabled(true);
-        ui->labelComstate->setText("Connected");
-        scrolldown();
-        timer->stop();
-        disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
-        on_buttonRefreshTempState_clicked();
-    }
-}
 void gpicontroller::get_serial(QString data){
     if (data!='0')
     {
@@ -178,11 +174,35 @@ void gpicontroller::get_serial(QString data){
         connect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
     }
 }
+void gpicontroller::get_firmware(QString data){
+    if (data!='0')
+    {
+        disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_firmware(QString)));
+        ui->labelFirmware->setText(data);
+        ui->labelFirmware->setEnabled(true);
+        ui->labelComstate->setText("Connected");
+        scrolldown();
+        timer->start();
+        send_message("@RDZ");
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position_startup(QString)));
+    }
+}
+void gpicontroller::update_encoder_position_startup(QString data)
+{
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position_startup(QString)));
+    timer->stop();
+    disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+    data=QString::number(data.toDouble()*.05);
+    ui->labelEncoder->setText(data);
+    on_buttonRefreshTempState_clicked();
+}
+
 void gpicontroller::select_vial()
 {
     QString message = "@GTV ";
     message+=ui->spinboxSelectVial->cleanText();
     send_message(message);
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
 }
 
 gpicontroller::~gpicontroller()
@@ -240,41 +260,50 @@ void gpicontroller::read_data()
 
 void gpicontroller::on_buttonHome_clicked()
 {
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonHome_clicked()));
     send_message("@HOME");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
 }
 
 void gpicontroller::send_message(QString message)
 {
-    if (message!="" && ui->labelComstate->text()!="Disconnected")
+    if (message!="")
     {
-        qDebug() << message;
-        ui->console->append(message);
-        QScrollBar *vsb = ui->console->verticalScrollBar();
-        QScrollBar *hsb = ui->console->horizontalScrollBar();
-        vsb->setValue(vsb->maximum());
-        hsb->setValue(hsb->minimum());
-        if (message=="#"){
-                setting_serial=true;
+        sendHistory.push_front(message);
+        if (ui->labelComstate->text()!="Disconnected")
+        {
+            qDebug() << message;
+            ui->console->append(message);
+            QScrollBar *vsb = ui->console->verticalScrollBar();
+            QScrollBar *hsb = ui->console->horizontalScrollBar();
+            vsb->setValue(vsb->maximum());
+            hsb->setValue(hsb->minimum());
+            if (message=="#"){
+                    setting_serial=true;
+            }
+            message+="\r";
+            port->write(message.toLatin1().data(),message.length());
+
+            // int *r=new int;
+            // buffer->append("test",r);
         }
-        message+="\r";
-        port->write(message.toLatin1().data(),message.length());
-//        int *r=new int;
-//        buffer->append("test",r);
+        else if (ui->labelComstate->text()!="Connected")
+        {
+            ui->console->append("<div style='color:red'>Error: Message \""+message+"\" not sent");
+            ui->console->append("<div style='color:red'>Not currently connected to valid machine");
+            QScrollBar *vsb = ui->console->verticalScrollBar();
+            QScrollBar *hsb = ui->console->horizontalScrollBar();
+            vsb->setValue(vsb->maximum());
+            hsb->setValue(hsb->minimum());
+        }
     }
-    else if (ui->labelComstate->text()!="Connected")
-    {
-        ui->console->append("<div style='color:red'>Error: Message \""+message+"\" not sent");
-        ui->console->append("<div style='color:red'>Not currently connected to valid machine");
-        QScrollBar *vsb = ui->console->verticalScrollBar();
-        QScrollBar *hsb = ui->console->horizontalScrollBar();
-        vsb->setValue(vsb->maximum());
-        hsb->setValue(hsb->minimum());
-    }
+
 }
 
 void gpicontroller::on_buttonPark_clicked()
 {
     send_message("@PRK");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
 }
 
 void gpicontroller::spinboxX_valueChanged()
@@ -350,40 +379,121 @@ void gpicontroller::make_labels_normal_weight(QLabel* element){
 
 void gpicontroller::on_buttonMove_clicked()
 {
-    if (ui->spinboxX->value()) send_message("@MVX "+QString::number(ui->spinboxX->value()));
-    if (ui->spinboxY->value()) send_message("@MVY "+QString::number(ui->spinboxY->value()));
-    if (ui->spinboxZ->value()) send_message("@MVZ "+QString::number(ui->spinboxZ->value()));
-    if (ui->spinboxNeedle->value()) send_message("@NDL "+QString::number(ui->spinboxNeedle->value()));
-    if (ui->spinboxSyringe->value()) send_message("@SYR "+QString::number(ui->spinboxSyringe->value()));
+
+    if (ui->spinboxNeedle->value())
+    {
+        ipart=int(ui->spinboxNeedle->value());
+        if (ipart==ui->spinboxNeedle->value())
+        {
+                fpart="0";
+                send_message("@NDL "+QString::number(ipart));
+
+        }
+        else
+        {
+            if ( ui->spinboxNeedle->value() > ui->labelEncoder->text().toDouble() )
+            {
+                fpart=QString::number((ui->spinboxNeedle->value()-ipart)/.05);//steps to go up
+                if (ui->labelEncoder->text().toInt()==ipart)
+                    send_message("@");
+                else
+                    send_message("@NDL "+QString::number(ipart));
+            }
+            else
+            {
+                fpart=QString::number(-(1-(ui->spinboxNeedle->value()-ipart))/.05);//steps to go down
+                if (ui->labelEncoder->text().toInt()==ipart+1)
+                    send_message("@");
+                else
+                    send_message("@NDL "+QString::number(ipart+1));
+            }
+        }
+        qDebug() << "fpart: " << fpart;
+        qDebug() << "ipart: " << ipart;
+        if (fpart!="0")
+            connect(this,SIGNAL(data_was_read(QString)),this,SLOT(unified_move_reciever()));
+        else
+            connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+        return;
+    }
+    if (QApplication::queryKeyboardModifiers()==Qt::AltModifier)
+    {
+        if (ui->spinboxX->value()) send_message("@MVX "+QString::number(-(ui->spinboxX->value())));
+        if (ui->spinboxY->value()) send_message("@MVY "+QString::number(-(ui->spinboxY->value())));
+        if (ui->spinboxZ->value()) send_message("@MVZ "+QString::number(-(ui->spinboxZ->value())));
+    }
+    else
+    {
+        if (ui->spinboxX->value()) send_message("@MVX "+QString::number(ui->spinboxX->value()));
+        if (ui->spinboxY->value()) send_message("@MVY "+QString::number(ui->spinboxY->value()));
+        if (ui->spinboxZ->value()) send_message("@MVZ "+QString::number(ui->spinboxZ->value()));
+    }
+
+    if (ui->spinboxSyringe->value() || ui->labelSyringe->font().bold()) send_message("@SYR "+QString::number(ui->spinboxSyringe->value()));
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
 
 }
-
-void gpicontroller::on_buttonHomeX_clicked()
+void gpicontroller::unified_move_reciever()
 {
-    send_message("@MVX -1480");
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(unified_move_reciever()));
+    send_message("@MVZ "+fpart);
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
 }
 
-void gpicontroller::on_buttonHomeY_clicked()
-{
-    send_message("@MVY -1950");
-}
+//disabled until it is implemented on the microcontroller side
+//void gpicontroller::on_buttonHomeX_clicked()
+//{
+//    send_message("@MVX -1480");
+//}
 
-void gpicontroller::on_buttonHomeZ_clicked()
-{
-    send_message("@MVZ -3500");
-}
+//void gpicontroller::on_buttonHomeY_clicked()
+//{
+//    send_message("@MVY -1950");
+//}
+
+//void gpicontroller::on_buttonHomeZ_clicked()
+//{
+//    send_message("@MVZ -3500");
+//}
 
 
 
 void gpicontroller::on_arbitrarySerialLine_returnPressed()
 {
     on_buttonSendArbitrary_clicked();
+    history_pos=0;
 }
+void gpicontroller::on_arbitrarySerialLine_downPressed()
+{
+    disconnect(ui->arbitrarySerialLine,SIGNAL(downPressed()),this,SLOT(on_arbitrarySerialLine_downPressed()));
 
+    ui->arbitrarySerialLine->clear();
+    if (history_pos>0)
+        history_pos--;
+    if (history_pos==-1)
+        history_pos=0;
+
+    if (sendHistory.length()>0)
+        ui->arbitrarySerialLine->setText(sendHistory[history_pos]);
+    connect(ui->arbitrarySerialLine,SIGNAL(downPressed()),this,SLOT(on_arbitrarySerialLine_downPressed()));
+}
+void gpicontroller::on_arbitrarySerialLine_upPressed()
+{
+    disconnect(ui->arbitrarySerialLine,SIGNAL(upPressed()),this,SLOT(on_arbitrarySerialLine_upPressed()));
+    ui->arbitrarySerialLine->clear();
+    if (history_pos==-1)
+        history_pos=0;
+    if (sendHistory.length()>0)
+        ui->arbitrarySerialLine->setText(sendHistory[history_pos]);
+    if (history_pos<(sendHistory.length()-1))
+        history_pos++;
+    connect(ui->arbitrarySerialLine,SIGNAL(upPressed()),this,SLOT(on_arbitrarySerialLine_upPressed()));
+}
 void gpicontroller::on_buttonSendArbitrary_clicked()
 {
     send_message(ui->arbitrarySerialLine->text().simplified()); //simplified removes whitespace from front and back
     ui->arbitrarySerialLine->clear();
+    history_pos=0;
 }
 void gpicontroller::set_needle_depth(QString data)
 {
@@ -405,17 +515,37 @@ void gpicontroller::needle_timeout()
 }
 void gpicontroller::on_buttonSetDepth_clicked()
 {
-    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
-//    timeout_sig=&needle_timeout;
-//    QTimer::singleShot(1000, this, SLOT(needle_timeout()));
-    send_message("@RDS");
+    if (QApplication::queryKeyboardModifiers()==Qt::ShiftModifier)
+    {
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(set_needle_depth(QString)));
+        send_message("@RDS");
+    }
+    else
+    {
+        send_message("@SND "+QString::number(ui->spinboxSetInjDepth->value()));
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(needle_depth_waiter()));
+    }
 }
 
+void gpicontroller::needle_depth_waiter()
+{
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(needle_depth_waiter()));
+    send_message("@SDF");//Saves the present values for inj needle depth, syringe speed, rinse strokes, temp set, and temp controller condition to the CF
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(needle_depth_waiter_2()));
+}
 
+void gpicontroller::needle_depth_waiter_2()
+{
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(needle_depth_waiter_2()));
+    send_message("@HOME");//Saves the present values for inj needle depth, syringe speed, rinse strokes, temp set, and temp controller condition to the CF
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonGoToDepthSetpoint_clicked()));
+}
 
 void gpicontroller::on_buttonGoToDepthSetpoint_clicked()
 {
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonGoToDepthSetpoint_clicked()));
     send_message("@NDL 99");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonRefreshEncoder_clicked()));
 }
 
 void gpicontroller::on_buttonSetSerialNumber_clicked()
@@ -429,6 +559,7 @@ void gpicontroller::on_buttonSetSerialNumber_clicked()
 void gpicontroller::on_buttonHomeNeedle_clicked()
 {
     send_message("@NDL 0");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonRefreshEncoder_clicked()));
 }
 
 void gpicontroller::on_buttonRefreshTempState_clicked()
@@ -503,7 +634,8 @@ void gpicontroller::get_needle_depth(QString data)
             disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_needle_depth(QString)));
             data=datal[0];
             qDebug() << data.toFloat();
-            int val=int(data.toFloat()+.5);
+            float val=data.toFloat();
+            ui->spinboxSetInjDepth->setValue(val);
             ui->spinboxNeedle->setValue(val);
             ui->console->append("<div style='color:LimeGreen'>Needle SetPoint is: "+data+"</div>");
             QScrollBar *vsb = ui->console->verticalScrollBar();
@@ -636,3 +768,70 @@ void gpicontroller::on_spinboxZmm_valueChanged(double val)
     ui->spinboxZ->blockSignals(false);
 }
 
+void gpicontroller::update_encoder_position()
+{
+   disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+   send_message("@RDZ");
+   connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position_reciever(QString)));
+}
+void gpicontroller::update_encoder_position_reciever(QString data)
+{
+    data=QString::number(data.toDouble()*.05);
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position_reciever(QString)));
+    ui->labelEncoder->setText(data);
+}
+
+
+void gpicontroller::on_buttonRefreshEncoder_clicked()
+{
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(on_buttonRefreshEncoder_clicked()));
+    update_encoder_position();
+}
+
+void gpicontroller::on_buttonNeedleUp_clicked()
+{
+    if (QApplication::queryKeyboardModifiers()==Qt::ShiftModifier)
+    {
+        send_message("@MVZ -120");
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+    }
+    else
+    {
+        send_message("@MVZ -5");
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+    }
+}
+
+void gpicontroller::on_buttonNeedleDown_clicked()
+{
+    if (QApplication::queryKeyboardModifiers()==Qt::ShiftModifier)
+    {
+        send_message("@MVZ 120");
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+    }
+    else
+    {
+        send_message("@MVZ 5");
+        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+    }
+}
+
+void gpicontroller::on_buttonUp_clicked()
+{
+    send_message("@MVY 35");
+}
+
+void gpicontroller::on_buttonDown_clicked()
+{
+    send_message("@MVY -35");
+}
+
+void gpicontroller::on_buttonLeft_clicked()
+{
+    send_message("@MVX -35");
+}
+
+void gpicontroller::on_buttonRight_clicked()
+{
+    send_message("@MVX 35");
+}

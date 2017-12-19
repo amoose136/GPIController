@@ -22,7 +22,9 @@ SOURCES     += \
                 framelesswindow/framelesswindow.cpp \
                 framelesswindow/windowdragger.cpp \
                 serialbuffer.cpp \
-                qtcspinbox.cpp
+                qtcspinbox.cpp \
+    superqlineedit.cpp \
+    qtcintspinbox.cpp
 
 HEADERS     += \
                 gpicontroller.h \
@@ -30,7 +32,9 @@ HEADERS     += \
                 framelesswindow/windowdragger.h \
                 framelesswindow/framelesswindow.h \
                 serialBuffer.h \
-                qtcspinbox.h
+                qtcspinbox.h \
+    superqlineedit.h \
+    qtcintspinbox.h
 
 
 FORMS       += \

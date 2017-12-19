@@ -30,11 +30,18 @@ class gpicontroller : public QMainWindow
         serialBuffer* buffer;
         QString readData;
         QSerialPortInfo* portinfo;
-        QVector<QString> sendHistory;
         QSerialPort* port;
+
+        QVector<QString> sendHistory;
+        int history_pos=-1;
+
         void *timeout_sig;
         bool setting_serial=false;
         int serialNumber=11111;
+
+        int ipart;
+        QString fpart;
+
         QTimer *timer=new QTimer(this);
 
         void open_port(QString portname);
@@ -50,12 +57,18 @@ class gpicontroller : public QMainWindow
         void timed_out();
 
     private slots:
+        void unified_move_reciever();
         void update_temp_buttons(QString);
         void read_data();
         void set_needle_depth(QString);
         void needle_timeout();
+        void update_encoder_position();
+        void update_encoder_position_reciever(QString);
+        void update_encoder_position_startup(QString);
         void set_temperature_bar(QString);
         void get_needle_depth(QString);
+        void needle_depth_waiter();
+        void needle_depth_waiter_2();
         void initialize(QString);
         void get_firmware(QString);
         void get_serial(QString);
@@ -74,11 +87,13 @@ class gpicontroller : public QMainWindow
         void on_buttonConnect_clicked();
         void on_buttonPark_clicked();
         void on_buttonMove_clicked();
-        void on_buttonHomeX_clicked();
-        void on_buttonHomeY_clicked();
-        void on_buttonHomeZ_clicked();
+//        void on_buttonHomeX_clicked();
+//        void on_buttonHomeY_clicked();
+//        void on_buttonHomeZ_clicked();
         void on_buttonSendArbitrary_clicked();
         void on_arbitrarySerialLine_returnPressed();
+        void on_arbitrarySerialLine_upPressed();
+        void on_arbitrarySerialLine_downPressed();
 
         void on_buttonSetDepth_clicked();
 
@@ -109,6 +124,20 @@ class gpicontroller : public QMainWindow
         void on_spinboxYin_valueChanged(double);
 
         void on_spinboxZmm_valueChanged(double);
+
+        void on_buttonRefreshEncoder_clicked();
+
+        void on_buttonNeedleUp_clicked();
+
+        void on_buttonNeedleDown_clicked();
+
+        void on_buttonUp_clicked();
+
+        void on_buttonDown_clicked();
+
+        void on_buttonLeft_clicked();
+
+        void on_buttonRight_clicked();
 
 private:
         Ui::gpicontroller *ui;

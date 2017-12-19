@@ -1,16 +1,17 @@
-#ifndef QTCSPINBOX_H
-#define QTCSPINBOX_H
+#ifndef QTCINTSPINBOX_H
+#define QTCINTSPINBOX_H
+
 
 #include <QDoubleSpinBox>
 #include <QObject>
 #include <QEvent>
 #include <QKeyEvent>
 
-class QtcSpinBox : public QDoubleSpinBox
+class QtcIntSpinBox : public QSpinBox
 {
     Q_OBJECT
     public:
-        QtcSpinBox(QWidget *parent=0);
+        QtcIntSpinBox(QWidget *parent=0);
 
     signals:
         void enterPressed();
@@ -19,4 +20,4 @@ class QtcSpinBox : public QDoubleSpinBox
         bool eventFilter(QObject *anObject, QEvent *anEvent);
 };
 
-#endif // QTCSPINBOX_H
+#endif // QTCINTSPINBOX_H

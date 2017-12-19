@@ -1,12 +1,12 @@
-#include "qtcspinbox.h"
+#include "qtcintspinbox.h"
 #include <QDebug>
 
-QtcSpinBox::QtcSpinBox(QWidget *parent) : QDoubleSpinBox(parent)
+QtcIntSpinBox::QtcIntSpinBox(QWidget *parent) : QSpinBox(parent)
 {
     installEventFilter(this);
 }
 
-bool QtcSpinBox::eventFilter(QObject *anObject, QEvent *anEvent)
+bool QtcIntSpinBox::eventFilter(QObject *anObject, QEvent *anEvent)
 {
   if (anEvent->type() == QEvent::KeyPress)
   {
@@ -18,5 +18,5 @@ bool QtcSpinBox::eventFilter(QObject *anObject, QEvent *anEvent)
         return true;
       }
   }
-  return QDoubleSpinBox::eventFilter(anObject, anEvent);
+  return QSpinBox::eventFilter(anObject, anEvent);
 }
