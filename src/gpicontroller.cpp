@@ -78,7 +78,7 @@ void gpicontroller::open_port(QString portname)
         port->open(QIODevice::ReadWrite);
     }
     // Check the validity of the port
-    if ( !port->error()==QSerialPort::NoError )
+    if ( !(port->error()==QSerialPort::NoError) )
     {
         qDebug() << "\nError: " << port->portName() << " port can't be opened ...";
         ui->console->append(port->portName()+" port can't be opened ...");

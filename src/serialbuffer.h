@@ -108,6 +108,8 @@ class serialBuffer : public QObject
         template<class T>
         int append(const QString &c,T* p)
         {
+            qDebug() << c;
+            qDebug() << p;
 //            if (commandList.)
 //            {
 //                command<T>(c,p);

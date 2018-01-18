@@ -1119,7 +1119,7 @@ Pressing enter/return will press Rinse</string>
                <string>Raise needle .15mm or 6mm if shift is held</string>
               </property>
               <property name="text">
-               <string>🡩</string>
+               <string>↑</string>
               </property>
              </widget>
             </item>
@@ -1163,7 +1163,7 @@ Pressing enter/return will press Rinse</string>
                <string>Lower needle .15mm or 6mm if shift is held</string>
               </property>
               <property name="text">
-               <string>🡫</string>
+               <string>↓</string>
               </property>
              </widget>
             </item>
@@ -1189,7 +1189,7 @@ Pressing enter/return will press Rinse</string>
                <string>Move needle carriage in the negative x direction .25&quot;</string>
               </property>
               <property name="text">
-               <string>🡨</string>
+               <string>←</string>
               </property>
              </widget>
             </item>
@@ -1199,7 +1199,7 @@ Pressing enter/return will press Rinse</string>
                <string>Move needle carriage in the negative y direction .25&quot;</string>
               </property>
               <property name="text">
-               <string>🡫</string>
+               <string>↓</string>
               </property>
              </widget>
             </item>
@@ -1209,7 +1209,7 @@ Pressing enter/return will press Rinse</string>
                <string>Move needle carriage in the positive y direction .25&quot;</string>
               </property>
               <property name="text">
-               <string>🡩</string>
+               <string>↑</string>
               </property>
              </widget>
             </item>
@@ -1247,7 +1247,7 @@ Pressing enter/return will press Rinse</string>
                <string>Move needle carriage in the positive x direction .25&quot;</string>
               </property>
               <property name="text">
-               <string>🡪</string>
+               <string>→</string>
               </property>
              </widget>
             </item>
