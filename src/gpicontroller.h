@@ -37,6 +37,7 @@ class gpicontroller : public QMainWindow
 
         void *timeout_sig;
         bool setting_serial=false;
+        bool setting_date=false;
         int serialNumber=11111;
 
         int ipart;
@@ -138,6 +139,10 @@ class gpicontroller : public QMainWindow
         void on_buttonLeft_clicked();
 
         void on_buttonRight_clicked();
+
+        void on_buttonGetCurrentTime_clicked();
+
+        void on_buttonUpdateMachineTime_clicked();
 
 private:
         Ui::gpicontroller *ui;

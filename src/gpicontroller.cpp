@@ -57,6 +57,8 @@ gpicontroller::gpicontroller(QWidget *parent) :
     connect(ui->arbitrarySerialLine,SIGNAL(downPressed()),this,SLOT(on_arbitrarySerialLine_downPressed()));
     connect(ui->arbitrarySerialLine,SIGNAL(upPressed()),this,SLOT(on_arbitrarySerialLine_upPressed()));
 
+    on_buttonGetCurrentTime_clicked();
+
     refresh_comBox();
     if (QSysInfo::productType()=="osx" && ui->comBox->findText("/dev/cu.usbserial")+1)
         ui->comBox->setCurrentIndex(ui->comBox->findText("/dev/cu.usbserial"));
@@ -239,7 +241,7 @@ void gpicontroller::read_data()
             readData.clear();
         }
     }
-    else
+    else if (setting_serial)
     {
         if (readData.simplified()=="Enter S/N (5 digits)"){
             ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
@@ -252,6 +254,23 @@ void gpicontroller::read_data()
             send_message(QString::number(serialNumber));
             qDebug() << "now not setting serial";
             send_message("@GSIP 1");
+        }
+    }
+    else if (setting_date)
+    {
+        timer->stop();
+        disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+        if (readData.simplified()=="Enter Time(wkday,year10,year1,mon10,mon1,day10,day1,hour10,hour1,min10,min1,sec10,sec1(NO COMMAS): ") {
+            ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
+            emit data_was_read(readData.simplified());
+    //        buffer.append(readData.simplified(),p);
+            readData.clear();
+            setting_date=false;
+            QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
+            vsb->setValue(vsb->maximum());
+            qDebug() << "Now setting date";
+            QDateTime date = ui->dateTimeEdit->dateTime();
+            send_message(QString::number(date.date().dayOfWeek()%7)+date.toString("yyMMddhhmmss"));
         }
     }
     QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
@@ -278,8 +297,14 @@ void gpicontroller::send_message(QString message)
             QScrollBar *hsb = ui->console->horizontalScrollBar();
             vsb->setValue(vsb->maximum());
             hsb->setValue(hsb->minimum());
-            if (message=="#"){
-                    setting_serial=true;
+            if (message=="#")
+                setting_serial=true;
+            if (message=="s")
+            {
+                setting_date=true;
+                timer->setInterval(5000);
+                connect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
+                timer->start();
             }
             message+="\r";
             port->write(message.toLatin1().data(),message.length());
@@ -379,7 +404,6 @@ void gpicontroller::make_labels_normal_weight(QLabel* element){
 
 void gpicontroller::on_buttonMove_clicked()
 {
-
     if (ui->spinboxNeedle->value())
     {
         ipart=int(ui->spinboxNeedle->value());
@@ -416,17 +440,44 @@ void gpicontroller::on_buttonMove_clicked()
             connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
         return;
     }
-    if (QApplication::queryKeyboardModifiers()==Qt::AltModifier)
+    if (QApplication::queryKeyboardModifiers()==Qt::AltModifier) //For inverted x, y, or z movement
     {
         if (ui->spinboxX->value()) send_message("@MVX "+QString::number(-(ui->spinboxX->value())));
         if (ui->spinboxY->value()) send_message("@MVY "+QString::number(-(ui->spinboxY->value())));
-        if (ui->spinboxZ->value()) send_message("@MVZ "+QString::number(-(ui->spinboxZ->value())));
+        if (ui->spinboxZ->value())
+        {
+            float newZPos=ui->labelEncoder->text().toFloat()-.05*(ui->spinboxZ->value());
+            if (newZPos<=50) //Thou shalt not go below 50mm in the z lest needles be bent
+                send_message("@MVZ "+QString::number(-(ui->spinboxZ->value())));
+            else
+            {
+                ui->console->append("<div style='color:red'>Relative needle move, \"@MVZ "+QString::number(-(ui->spinboxZ->value()))+"\", not sent. Out of bounds movment.</div>");
+                QScrollBar *vsb = ui->console->verticalScrollBar();
+                QScrollBar *hsb = ui->console->horizontalScrollBar();
+                vsb->setValue(vsb->maximum());
+                hsb->setValue(hsb->minimum());
+            }
+
+        }
     }
-    else
+    else //For normal x, y, or z movement
     {
         if (ui->spinboxX->value()) send_message("@MVX "+QString::number(ui->spinboxX->value()));
         if (ui->spinboxY->value()) send_message("@MVY "+QString::number(ui->spinboxY->value()));
-        if (ui->spinboxZ->value()) send_message("@MVZ "+QString::number(ui->spinboxZ->value()));
+        if (ui->spinboxZ->value())
+        {
+            float newZPos=ui->labelEncoder->text().toFloat()+.05*(ui->spinboxZ->value());
+            if (newZPos<=50) //Thou shalt not go below 50mm in the z lest needles be bent
+                send_message("@MVZ "+QString::number(ui->spinboxZ->value()));
+            else
+            {
+                ui->console->append("<div style='color:red'>Relative needle move, \"@MVZ "+QString::number(ui->spinboxZ->value())+"\", not sent. Out of bounds movment.</div>");
+                QScrollBar *vsb = ui->console->verticalScrollBar();
+                QScrollBar *hsb = ui->console->horizontalScrollBar();
+                vsb->setValue(vsb->maximum());
+                hsb->setValue(hsb->minimum());
+            }
+        }
     }
 
     if (ui->spinboxSyringe->value() || ui->labelSyringe->font().bold()) send_message("@SYR "+QString::number(ui->spinboxSyringe->value()));
@@ -834,4 +885,16 @@ void gpicontroller::on_buttonLeft_clicked()
 void gpicontroller::on_buttonRight_clicked()
 {
     send_message("@MVX 35");
+}
+
+void gpicontroller::on_buttonGetCurrentTime_clicked()
+{
+    ui->dateTimeEdit->setDateTime(QDateTime::currentDateTime());
+}
+
+void gpicontroller::on_buttonUpdateMachineTime_clicked()
+{
+//    QDateTime date = ui->dateTimeEdit->dateTime();
+//    qDebug() << QString::number(date.date().dayOfWeek()%7)+date.toString("yyMMddhhmmss");
+    send_message("s");
 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>949</width>
+    <width>982</width>
     <height>700</height>
    </rect>
   </property>
@@ -176,7 +176,7 @@
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="rightMargin">
-            <number>8</number>
+            <number>0</number>
            </property>
            <property name="bottomMargin">
             <number>5</number>
@@ -240,12 +240,14 @@
               <widget class="QtcSpinBox" name="spinboxXin">
                <property name="minimumSize">
                 <size>
-                 <width>70</width>
+                 <width>0</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="toolTip">
-                <string>Scroll to change or type to enter a precise value</string>
+                <string>Scroll to change or type to enter a precise value
+↵ activates the move command
+ALT+↵ sends the move command but in the opposite direction</string>
                </property>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::NoButtons</enum>
@@ -288,7 +290,9 @@
                 </size>
                </property>
                <property name="toolTip">
-                <string>Scroll to change or type to enter a precise value</string>
+                <string>Scroll to change or type to enter a precise value
+↵ activates the move command
+ALT+↵ sends the move command but in the opposite direction</string>
                </property>
                <property name="layoutDirection">
                 <enum>Qt::LeftToRight</enum>
@@ -334,12 +338,14 @@
               <widget class="QtcSpinBox" name="spinboxYin">
                <property name="minimumSize">
                 <size>
-                 <width>70</width>
+                 <width>0</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="toolTip">
-                <string>Scroll to change or type to enter a precise value</string>
+                <string>Scroll to change or type to enter a precise value
+↵ activates the move command
+ALT+↵ sends the move command but in the opposite direction</string>
                </property>
                <property name="statusTip">
                 <string/>
@@ -385,7 +391,9 @@
                 </size>
                </property>
                <property name="toolTip">
-                <string>Scroll to change or type to enter a precise value</string>
+                <string>Scroll to change or type to enter a precise value
+↵ activates the move command
+ALT+↵ sends the move command but in the opposite direction</string>
                </property>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::UpDownArrows</enum>
@@ -426,15 +434,9 @@
              </property>
              <item>
               <widget class="QtcSpinBox" name="spinboxZmm">
-               <property name="minimumSize">
-                <size>
-                 <width>70</width>
-                 <height>0</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Scroll to change or type to enter a precise value
-↵ actives the move command
+↵ activates the move command
 ALT+↵ sends the move command but in the opposite direction</string>
                </property>
                <property name="buttonSymbols">
@@ -481,7 +483,9 @@ ALT+↵ sends the move command but in the opposite direction</string>
                 </size>
                </property>
                <property name="toolTip">
-                <string>Scroll to change or type to enter a precise value</string>
+                <string>Scroll to change or type to enter a precise value
+↵ activates the move command
+ALT+↵ sends the move command but in the opposite direction</string>
                </property>
                <property name="frame">
                 <bool>true</bool>
@@ -512,7 +516,7 @@ ALT+↵ sends the move command but in the opposite direction</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>142</width>
+               <width>158</width>
                <height>0</height>
               </size>
              </property>
@@ -544,29 +548,14 @@ ALT+↵ sends the move command but in the opposite direction</string>
            </item>
            <item row="4" column="1">
             <widget class="QtcSpinBox" name="spinboxNeedle">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>172</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>65</width>
-               <height>16777215</height>
-              </size>
-             </property>
              <property name="toolTip">
               <string>Scroll to change or type to enter a precise value</string>
              </property>
              <property name="suffix">
               <string> mm</string>
+             </property>
+             <property name="maximum">
+              <double>50.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -591,30 +580,6 @@ ALT+↵ sends the move command but in the opposite direction</string>
            </item>
            <item row="5" column="1">
             <widget class="QtcIntSpinBox" name="spinboxSyringe">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>172</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="sizeIncrement">
-              <size>
-               <width>1</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="baseSize">
-              <size>
-               <width>0</width>
-               <height>6</height>
-              </size>
-             </property>
              <property name="toolTip">
               <string>Scroll to change or type to enter a precise value</string>
              </property>
@@ -625,11 +590,6 @@ ALT+↵ sends the move command but in the opposite direction</string>
            </item>
            <item row="6" column="0">
             <widget class="QPushButton" name="buttonGoToDepthSetpoint">
-             <property name="font">
-              <font>
-               <pointsize>11</pointsize>
-              </font>
-             </property>
              <property name="toolTip">
               <string>Grabs the injector port depth from memory and goes there</string>
              </property>
@@ -651,14 +611,6 @@ ALT+↵ sends the move command but in the opposite direction</string>
                <width>115</width>
                <height>0</height>
               </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <pointsize>12</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
              </property>
              <property name="toolTip">
               <string>Send the command to move the active element of the form above by the indicated amount</string>
@@ -955,7 +907,7 @@ Pressing enter/return will press Rinse</string>
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="labelCurrentTemp">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1141,7 +1093,7 @@ Pressing enter/return will press Rinse</string>
                <string>Fully raise the needle to 0 mm</string>
               </property>
               <property name="text">
-               <string>🏠 Needle</string>
+               <string>🏠 Z</string>
               </property>
              </widget>
             </item>
@@ -1183,6 +1135,28 @@ Pressing enter/return will press Rinse</string>
             <property name="bottomMargin">
              <number>0</number>
             </property>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="buttonPark">
+              <property name="toolTip">
+               <string>Move to park position</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Park</string>
+              </property>
+              <property name="autoDefault">
+               <bool>false</bool>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
              <widget class="QPushButton" name="buttonLeft">
               <property name="toolTip">
@@ -1190,6 +1164,16 @@ Pressing enter/return will press Rinse</string>
               </property>
               <property name="text">
                <string>←</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="buttonRight">
+              <property name="toolTip">
+               <string>Move needle carriage in the positive x direction .25&quot;</string>
+              </property>
+              <property name="text">
+               <string>→</string>
               </property>
              </widget>
             </item>
@@ -1229,44 +1213,6 @@ Pressing enter/return will press Rinse</string>
               </property>
               <property name="text">
                <string>🏠 All</string>
-              </property>
-              <property name="autoDefault">
-               <bool>false</bool>
-              </property>
-              <property name="default">
-               <bool>false</bool>
-              </property>
-              <property name="flat">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="buttonRight">
-              <property name="toolTip">
-               <string>Move needle carriage in the positive x direction .25&quot;</string>
-              </property>
-              <property name="text">
-               <string>→</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="buttonPark">
-              <property name="font">
-               <font>
-                <family>Arial</family>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>Move to park position</string>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Park</string>
               </property>
               <property name="autoDefault">
                <bool>false</bool>
@@ -1406,36 +1352,123 @@ Pressing enter/return will press Rinse</string>
         <item>
          <layout class="QVBoxLayout" name="layoutConsole">
           <item>
-           <widget class="QGroupBox" name="GroupSerialNumber">
-            <property name="title">
-             <string>Serial Number</string>
+           <layout class="QHBoxLayout" name="layoutSerialAndTime">
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <layout class="QHBoxLayout" name="layout_serialNumber">
-             <item>
-              <widget class="QtcIntSpinBox" name="spinBoxSerialNumber">
-               <property name="toolTip">
-                <string>Scroll to change or type to enter a precise value</string>
+            <item>
+             <widget class="QGroupBox" name="GroupSerialNumber">
+              <property name="title">
+               <string>Serial Number</string>
+              </property>
+              <layout class="QHBoxLayout" name="layoutSerialNumber">
+               <item>
+                <widget class="QtcIntSpinBox" name="spinBoxSerialNumber">
+                 <property name="toolTip">
+                  <string>Scroll to change or type to enter a precise value</string>
+                 </property>
+                 <property name="statusTip">
+                  <string/>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>99999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonSetSerialNumber">
+                 <property name="text">
+                  <string>Set</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupDateTime">
+              <property name="title">
+               <string>Date + Time</string>
+              </property>
+              <layout class="QVBoxLayout" name="layoutTimeControls">
+               <property name="spacing">
+                <number>6</number>
                </property>
-               <property name="statusTip">
-                <string/>
-               </property>
-               <property name="buttonSymbols">
-                <enum>QAbstractSpinBox::UpDownArrows</enum>
-               </property>
-               <property name="maximum">
-                <number>99999</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="buttonSetSerialNumber">
-               <property name="text">
-                <string>Set</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+               <item>
+                <layout class="QHBoxLayout" name="layoutTimeSet">
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QDateTimeEdit" name="dateTimeEdit">
+                   <property name="toolTipDuration">
+                    <number>0</number>
+                   </property>
+                   <property name="inputMethodHints">
+                    <set>Qt::ImhDate|Qt::ImhPreferNumbers|Qt::ImhTime</set>
+                   </property>
+                   <property name="dateTime">
+                    <datetime>
+                     <hour>0</hour>
+                     <minute>0</minute>
+                     <second>0</second>
+                     <year>2018</year>
+                     <month>1</month>
+                     <day>24</day>
+                    </datetime>
+                   </property>
+                   <property name="date">
+                    <date>
+                     <year>2018</year>
+                     <month>1</month>
+                     <day>24</day>
+                    </date>
+                   </property>
+                   <property name="calendarPopup">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonUpdateMachineTime">
+                   <property name="text">
+                    <string>Set</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="layoutTimeButtons">
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="buttonGetMachineTime">
+                   <property name="text">
+                    <string>Get Machine Time</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonGetCurrentTime">
+                   <property name="text">
+                    <string>Get Current</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QTextBrowser" name="console">
