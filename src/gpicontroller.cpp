@@ -11,7 +11,7 @@
 #include <QSysInfo>
 #include <QScrollBar>
 #include <QDesktopWidget>
-#include "serialbuffer.h"
+#include "serialBuffer.h"
 #include <QTimer>
 #include <QFloat16>
 
@@ -232,7 +232,7 @@ void gpicontroller::on_buttonConnect_clicked()
 void gpicontroller::read_data()
 {
     readData.append(QString(port->readAll()));
-    if (!setting_serial)
+    if (!setting_serial && !setting_date)
     {
         if ((readData.endsWith("\n") || readData.endsWith("\r")) && readData.simplified().length()>0){
             ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
@@ -260,7 +260,7 @@ void gpicontroller::read_data()
     {
         timer->stop();
         disconnect(timer,SIGNAL(timeout()),this,SLOT(timed_out()));
-        if (readData.simplified()=="Enter Time(wkday,year10,year1,mon10,mon1,day10,day1,hour10,hour1,min10,min1,sec10,sec1(NO COMMAS): ") {
+        if (readData.simplified()=="Enter Time(wkday,year10,year1,mon10,mon1,day10,day1,hour10,hour1,min10,min1,sec10,sec1(NO COMMAS):") {
             ui->console->append("<div style='color:DeepSkyBlue'>"+readData.simplified()+"</div>");
             emit data_was_read(readData.simplified());
     //        buffer.append(readData.simplified(),p);
@@ -271,6 +271,7 @@ void gpicontroller::read_data()
             qDebug() << "Now setting date";
             QDateTime date = ui->dateTimeEdit->dateTime();
             send_message(QString::number(date.date().dayOfWeek()%7)+date.toString("yyMMddhhmmss"));
+            send_message("t");
         }
     }
     QScrollBar * vsb = ui->console->verticalScrollBar(); //pointer to scroll bar existing for length of this read_data call
@@ -857,13 +858,19 @@ void gpicontroller::on_buttonNeedleDown_clicked()
 {
     if (QApplication::queryKeyboardModifiers()==Qt::ShiftModifier)
     {
-        send_message("@MVZ 120");
-        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+        float newZPos=ui->labelEncoder->text().toFloat()+.05*(120);
+        if (newZPos<=50){
+            send_message("@MVZ 120");
+            connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+        }
     }
     else
     {
-        send_message("@MVZ 5");
-        connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+        float newZPos=ui->labelEncoder->text().toFloat()+.05*(5);
+        if (newZPos<=50){
+            send_message("@MVZ 5");
+            connect(this,SIGNAL(data_was_read(QString)),this,SLOT(update_encoder_position()));
+        }
     }
 }
 
@@ -897,4 +904,19 @@ void gpicontroller::on_buttonUpdateMachineTime_clicked()
 //    QDateTime date = ui->dateTimeEdit->dateTime();
 //    qDebug() << QString::number(date.date().dayOfWeek()%7)+date.toString("yyMMddhhmmss");
     send_message("s");
+}
+
+void gpicontroller::on_buttonGetMachineTime_clicked()
+{
+    send_message("t");
+    connect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_datetime(QString)));
+}
+void gpicontroller::get_datetime(QString datetime)
+{
+    disconnect(this,SIGNAL(data_was_read(QString)),this,SLOT(get_datetime(QString)));
+    QString date = datetime.mid(11);
+    QString format = "HH:mm:ss,MM/dd/yyyy";
+    QDateTime d = QDateTime::fromString(date,
+                                        format);
+    ui->dateTimeEdit->setDateTime(d);
 }

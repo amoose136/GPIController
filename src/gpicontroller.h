@@ -74,6 +74,7 @@ class gpicontroller : public QMainWindow
         void get_firmware(QString);
         void get_serial(QString);
         void update_temp_setpoint(QString);
+        void get_datetime(QString);
 
         void on_buttonHome_clicked();
 
@@ -143,6 +144,8 @@ class gpicontroller : public QMainWindow
         void on_buttonGetCurrentTime_clicked();
 
         void on_buttonUpdateMachineTime_clicked();
+
+        void on_buttonGetMachineTime_clicked();
 
 private:
         Ui::gpicontroller *ui;
