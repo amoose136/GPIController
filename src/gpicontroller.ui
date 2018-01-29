@@ -549,7 +549,8 @@ ALT+↵ sends the move command but in the opposite direction</string>
            <item row="4" column="1">
             <widget class="QtcSpinBox" name="spinboxNeedle">
              <property name="toolTip">
-              <string>Scroll to change or type to enter a precise value</string>
+              <string>Scroll to change or type to enter a precise value
+↵ activates the move command</string>
              </property>
              <property name="suffix">
               <string> mm</string>
@@ -581,7 +582,8 @@ ALT+↵ sends the move command but in the opposite direction</string>
            <item row="5" column="1">
             <widget class="QtcIntSpinBox" name="spinboxSyringe">
              <property name="toolTip">
-              <string>Scroll to change or type to enter a precise value</string>
+              <string>Scroll to change or type to enter a precise value
+↵ activates the move command</string>
              </property>
              <property name="suffix">
               <string> μL</string>
@@ -748,7 +750,7 @@ Holding shift will set the depth to whatever the current needle position is with
             <number>5</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="layoutRinse">
              <property name="bottomMargin">
               <number>0</number>
              </property>
@@ -831,7 +833,7 @@ Pressing enter/return will press Rinse</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <layout class="QVBoxLayout" name="layoutVerticalTemp">
              <property name="rightMargin">
               <number>0</number>
              </property>
@@ -1122,7 +1124,7 @@ Pressing enter/return will press Rinse</string>
            </layout>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_2">
+           <layout class="QGridLayout" name="layoutJogGrid">
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -1406,7 +1408,7 @@ Pressing enter/return will press Rinse</string>
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QDateTimeEdit" name="dateTimeEdit">
+                  <widget class="superQDateTimeEdit" name="dateTimeEdit">
                    <property name="toolTipDuration">
                     <number>0</number>
                    </property>
@@ -1558,10 +1560,19 @@ p, li { white-space: pre-wrap; }
     <signal>enterPressed()</signal>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>superQDateTimeEdit</class>
+   <extends>QDateTimeEdit</extends>
+   <header>superqdatetimeedit.h</header>
+   <slots>
+    <signal>enterPressed()</signal>
+   </slots>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>spinboxSelectVial</tabstop>
   <tabstop>buttonSelectVial</tabstop>
+  <tabstop>buttonRefreshEncoder</tabstop>
   <tabstop>spinboxXin</tabstop>
   <tabstop>spinboxX</tabstop>
   <tabstop>spinboxYin</tabstop>
@@ -1570,8 +1581,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>spinboxZ</tabstop>
   <tabstop>spinboxNeedle</tabstop>
   <tabstop>spinboxSyringe</tabstop>
-  <tabstop>buttonGoToDepthSetpoint</tabstop>
   <tabstop>buttonMove</tabstop>
+  <tabstop>buttonGoToDepthSetpoint</tabstop>
   <tabstop>buttonGetNeedleDepthSetPoint</tabstop>
   <tabstop>spinboxSetInjDepth</tabstop>
   <tabstop>buttonSetDepth</tabstop>
@@ -1581,23 +1592,27 @@ p, li { white-space: pre-wrap; }
   <tabstop>buttonTempOff</tabstop>
   <tabstop>buttonRefreshTempState</tabstop>
   <tabstop>buttonCRefresh</tabstop>
-  <tabstop>buttonGetTemp</tabstop>
-  <tabstop>buttonSetTemp</tabstop>
   <tabstop>spinBoxTemperature</tabstop>
-  <tabstop>buttonNeedleUp</tabstop>
-  <tabstop>buttonHomeNeedle</tabstop>
-  <tabstop>buttonNeedleDown</tabstop>
-  <tabstop>buttonPark</tabstop>
-  <tabstop>buttonLeft</tabstop>
-  <tabstop>buttonUp</tabstop>
-  <tabstop>buttonHome</tabstop>
-  <tabstop>buttonDown</tabstop>
-  <tabstop>buttonRight</tabstop>
+  <tabstop>buttonSetTemp</tabstop>
+  <tabstop>buttonGetTemp</tabstop>
   <tabstop>comBox</tabstop>
   <tabstop>buttonConnect</tabstop>
   <tabstop>buttonRefresh</tabstop>
+  <tabstop>buttonHome</tabstop>
+  <tabstop>buttonUp</tabstop>
+  <tabstop>buttonDown</tabstop>
+  <tabstop>buttonLeft</tabstop>
+  <tabstop>buttonRight</tabstop>
+  <tabstop>buttonPark</tabstop>
+  <tabstop>buttonHomeNeedle</tabstop>
+  <tabstop>buttonNeedleUp</tabstop>
+  <tabstop>buttonNeedleDown</tabstop>
   <tabstop>spinBoxSerialNumber</tabstop>
   <tabstop>buttonSetSerialNumber</tabstop>
+  <tabstop>dateTimeEdit</tabstop>
+  <tabstop>buttonUpdateMachineTime</tabstop>
+  <tabstop>buttonGetMachineTime</tabstop>
+  <tabstop>buttonGetCurrentTime</tabstop>
   <tabstop>console</tabstop>
   <tabstop>arbitrarySerialLine</tabstop>
   <tabstop>buttonSendArbitrary</tabstop>
@@ -1611,12 +1626,12 @@ p, li { white-space: pre-wrap; }
    <slot>animateClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>558</x>
-     <y>199</y>
+     <x>533</x>
+     <y>239</y>
     </hint>
     <hint type="destinationlabel">
-     <x>735</x>
-     <y>207</y>
+     <x>647</x>
+     <y>238</y>
     </hint>
    </hints>
   </connection>
@@ -1723,8 +1738,8 @@ p, li { white-space: pre-wrap; }
    <slot>animateClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>309</x>
-     <y>209</y>
+     <x>391</x>
+     <y>218</y>
     </hint>
     <hint type="destinationlabel">
      <x>317</x>
@@ -1755,8 +1770,8 @@ p, li { white-space: pre-wrap; }
    <slot>animateClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>300</x>
-     <y>175</y>
+     <x>391</x>
+     <y>183</y>
     </hint>
     <hint type="destinationlabel">
      <x>260</x>
@@ -1787,8 +1802,8 @@ p, li { white-space: pre-wrap; }
    <slot>animateClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>308</x>
-     <y>142</y>
+     <x>391</x>
+     <y>148</y>
     </hint>
     <hint type="destinationlabel">
      <x>303</x>
@@ -1809,6 +1824,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>297</x>
      <y>28</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dateTimeEdit</sender>
+   <signal>enterPressed()</signal>
+   <receiver>buttonUpdateMachineTime</receiver>
+   <slot>animateClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>830</x>
+     <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>936</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>

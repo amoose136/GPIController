@@ -721,6 +721,9 @@ void gpicontroller::on_buttonCRefresh_clicked()
         ui->buttonSetSerialNumber->setEnabled(val);
         ui->buttonRefreshTempState->setEnabled(val);
         ui->buttonGetTemp->setEnabled(val);
+        ui->buttonRefreshEncoder->setEnabled(val);
+        ui->buttonGetMachineTime->setEnabled(val);
+        ui->buttonUpdateMachineTime->setEnabled(val);
         timer->setInterval(1100);
         connect(timer,SIGNAL(timeout()),this,SLOT(on_buttonRefreshTempState_clicked()));
         timer->start();
@@ -744,6 +747,9 @@ void gpicontroller::on_buttonCRefresh_clicked()
         ui->buttonSetSerialNumber->setEnabled(val);
         ui->buttonRefreshTempState->setEnabled(val);
         ui->buttonGetTemp->setEnabled(val);
+        ui->buttonRefreshEncoder->setEnabled(val);
+        ui->buttonGetMachineTime->setEnabled(val);
+        ui->buttonUpdateMachineTime->setEnabled(val);
         timer->stop();
         disconnect(timer,SIGNAL(timeout()),this,SLOT(on_buttonRefreshTempState_clicked()));
         QTimer::singleShot(800,this,SLOT(on_buttonRefreshTempState_clicked()));//provide one final update to the temp state
